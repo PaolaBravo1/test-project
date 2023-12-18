@@ -1,0 +1,24 @@
+Hello, hope you are doing well!
+
+I have gone through your job posting and requirement skills.
+Being an EXPERT WEBGL DEVELOPER, with strong command in ✔️WebGL ✔️Three.js, ✔️Typescript in short, I'm good at building interactive 3d websites using WebGL libraries such as three.js and babylon.js. I specialize in dynamic geometry, mesh-based materials, realistic shader materials using GLSL, proper lighting effects and glsl shaders, and I enjoy animating models, meshes and materials.
+
+Attaching my working portfolio for reference:
+-https://wonderland.studio/
+Here, landing pages were developed using techniques such as lighting/flower effects, camera animations, and user-interactive dynamic geometry.
+And working with team members, including designers and front-end/back-end developers, gave me invaluable team collaboration experience.
+Three.js and GSAP were used.
+
+-https://www.brooklyncoachworks.com/configurator
+This is a Car Visualization project, where the user interactively changes the textures of several parts.
+React + Three.js  
+
+
+Let me know your availability, so we could schedule a call for a detailed discussion and planning regarding how to bring your vision into reality, as I am a Master of it!
+Best wishes!
+
+
+
+Understanding the fundamentals of 3D graphics and how they are used to create interactive 3D experiences, use the Three.js library to create 3D objects, scenes, and animations, having a good understanding  of the different types of materials, textures, and lighting available, 
+Also very familiar with the different types of cameras available in Three.js and how they can be used to create interesting perspectives in a scene or animation.
+Knowing how to optimize Three.js code for performance and scalability, and  to debug and troubleshoot issues with code.

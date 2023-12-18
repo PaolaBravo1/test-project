@@ -1,0 +1,9 @@
+Hello, hope you are doing well!
+
+Here is my portfolio website: https://williamscott.netlify.app/
+
+I have gone through your job posting and requirement skills.
+Being an EXPERT WEBGL DEVELOPER, with strong command in ✔️Three.js, ✔️Typescript, ✔️MERN STACK in short, I'm good at building interactive 3d websites using WebGL libraries such as three.js and babylon.js. I specialize in dynamic geometry, mesh-based materials, realistic shader materials using GLSL, proper lighting effects and glsl shaders, and I enjoy animating models, meshes and materials.
+
+Let me know your availability, so we could schedule a call for a detailed discussion and planning regarding how to bring your vision into reality, as I am a Master of it!
+Best wishes!
