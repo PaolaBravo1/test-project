@@ -1,0 +1,298 @@
+url
+=============University website with VueJS==============
+
+https://www.hse.ru/en/
+
+
+
+==================React Django Nginx styled components=============================
+http://sellercrowd.com
+https://www.magnolia-freelance.com
+https://www.hse.ru/en/
+
+ VERB : ( CRM SAAS)
+✓ CRM app for marketing
+✓ Video Messages to Customers (WebRTC)
+✓ Track Analytics in Real-Time
+✓ E-commerce integration
+https://www.verb.tech/
+https://play.google.com/store/apps/details?id=com.verb.verbcrm&hl=en&gl=US.
+https://apps.apple.com/us/app/verb-crm/id1486838169
+
+https://www.synthesia.io/
+
+- Online education system (React / Video.js)
+https://cloudgenius.app/
+
+PDF Editor
+
+https://www.sejda.com/pdf-editor
+
+📌 https://blackination.com/ **[ Php ] [Click on Videos-Similar features like YouTube]**
+
+
+📌 https://boomcaster.com/ (Podcast, Vodcast, and Livestream Platform)
+Boomcaster has the ability to podcast, videocast, and Livestream while recording separate high-quality tracks for each participant for post-production. It records separate streams for each participant locally and uploads them to the cloud. Boomcaster also provides a Zoom/Skype-like recording as a backup.
+🔥 Wordpress, Unpkg, MySQL, jQuery, PHP, Bootrape
+
+📌 http://easywebinar.com/ (SaaS-based Webinar & Video Conferencing Application)
+We have recently developed a Webinar & Video Conferencing Application using Licode MCU (Multipoint control unit) based on WebRTC/ Voxeet technology to build a component for live streaming, chat rooms, and live to poll. etc. Users can do Peer to peer text and video chat, screen sharing as well as also can do group chat too. There will be 4 presenters who can give a presentation simultaneously to many attendees.
+🔥 Wordpress, Chargebee, jQuery, core-js, PWA, Nginx, PHP, Materialize CSS, MySQL
+
+
+
+wordpress
+https://abigailskitchennyc.com/
+
+
+https://noel.heschung.com/en/chapitre/les-debuts-de-l-aventure/       Vue and Nuxt Node
+https://www.littlebeing.org/                                        vue and express and Nginx Tailwind CSS GSAP
+https://neverland.agency/
+https://www.hellomonday.com/
+https://www.sorenrose.com/
+https://sprightly-pasca-fb790a.netlify.app/                                     NFT website.
+
+
+https://dialics.com/ ( Call support website )
+https://jenni.ai ( Writing Assistant )
+https://www.jasper.ai ( AI Copywriter )
+https://articly.ai ( ai article generator )
+https://getimg.ai ( Image generator )
+https://synthesia.io ( ai video generator from text)
+
+ChatGPT Website 
+http://quizplein.nl/
+
+omni channel chatbot
+https://gobots.ai/
+https://mercadobot.net/
+https://lp.botmaker.com/es/chatbots
+
+
+
+
+    three.js
+
+https://spotdomain.netlify.app/ 
+https://staratlas.com/#
+webGL, webflow
+https://wesimply-web.webflow.io/
+https://kirschberg.co.nz/work      GSAP Tailwind
+https://rejouice.com/   React Gatsby PWA
+
+https://www.motleycrowd.live/projects
+https://dogstudio.co/
+
+game 
+https://lenslist.co/speed-boxing/
+
+Booking Three.js
+
+https://www.royalcaribbean.com/icon-of-the-seas
+
+
+Car Block show 
+https://acoustics.autoneum.com/
+
+
+https://pacha-soap-company.myshopify.com/ (Shopify)
+https://thebigshow-3482.myshopify.com/ (Shopify)
+https://midmodern-de.myshopify.com/ (Shopify)
+
+https://ball-making.pages.dev (3D Ecommerce Website)
+https://demo.corporate-metaverse.com (3D Ecommerce Website)
+https://skillshow.vercel.app/ (Content Website)
+https://mirrorball.com/ (3D Social Website)
+https://kprverse.com/ (3D Company Website)
+https://www.galaxy-balls.com/en (Pixel-Perfect Advertising Website)
+https://pacha-soap-company.myshopify.com/ (Shopify)
+https://thebigshow-3482.myshopify.com/ (Shopify)
+https://midmodern-de.myshopify.com/ (Shopify)
+
+Some of my successful projects are mentioned below:
+https://www.emailtimers.com
+Tech stack is JavaScript, Ruby on Rails, NodeJS, AngularJS, and ReactJS.
+
+https://illuminate.ae
+Its back end is developed in Ruby on Rails. At the front end, we used React, Redux and Redux Sagas, and Twitter Bootstrap.
+
+https://www.mailflowmonitoring.com
+The Tech stack is Angular, Ruby on Rails, React, JavaScript, Redis, and Postgres.
+
+https://dmarcreport.com/
+The Tech stack is AngularJS, Ruby on Rails, Redis, and Postgres.
+
+
+Checkout - https://apfusion.com/.                   Ruby
+I architected the whole application, the client raised $7M in seed round. This is a B2B application so that UI is messed up.
+
+Feedbear.com                    ruby
+
+http://ggtfunding.com               ruby
+
+coachcatalyst.com                   wordpress
+
+
+==================== IOS app=================================
+
+==================sermons and pastors=======================
+
+Video streaming
+
+https://mannasermons.com/
+https://play.google.com/store/apps/details?id=com.mannasermons.manna
+https://apps.apple.com/us/app/manna-sermons-for-the-soul/id1596973599
+
+
+===============health app=================
+
+-https://www.mind-easy.com/
+https://play.google.com/store/apps/details?id=com.MindEasy.mindeasyall
+https://apps.apple.com/us/app/mind-easy/id1628453321
+
+==============chatting app=============
+
+-https://wheelbees.com/
+https://play.google.com/store/apps/details?id=com.wheelbees
+https://apps.apple.com/us/app/wheelbees/id1585504248
+
+
+==============entertainment app===============
+
+-https://app.koharconcert.com/
+https://apps.apple.com/us/app/kohar/id1370922581
+https://play.google.com/store/apps/details?id=com.mobileapp.kohar&hl=en&gl=US
+
+
+
+
+Software Engineer | Javascript | iOS | FFmpeg| WebRTC
+
+
+[17:55:07] 3-PSB: -----------------------three.js--------------------------
+
+    https://webgi-jewelry.vercel.app/
+
+    https://norsepm.dk/ejendomme/telegrafkollegiet
+
+    https://drive.google.com/file/d/12pUgCwadfRw2R5z2iX0qT6510cpP1Rr8/view?usp=sharing
+
+    https://leap-for-mankind.com/lift-off
+
+    https://docs.pmnd.rs/react-three-fiber/getting-started/examples
+
+    https://wedo.lu (Laravel, React.js, Next, Elasticsearch, Redis)
+    
+    https://calahex.com/ (React.js, React hooks, Material-UI, Redux SAGA, Laravel backend)
+    
+    https://telmie.com/ (React.js, Gatsby, SSR, React hooks, Redux, )
+
+    https://www.southiemap.com/ (React)
+
+
+    https://prwatech.com/ (angular + express website)
+
+    ~~~ E-Commerce ~~~
+
+    https://subarashiistreetwear.com/
+    https://neurotoys.fun/en
+    https://www.nadinejewellery.com/
+    https://sportlifedistribution.com/
+    https://colorblockus.com/
+    https://willowroe.com/
+    https://attecenter.com/
+    https://www.badeloftusa.com/
+    https://breeo.co/
+    https://www.casouls.com/
+    https://www.malibumud.com/
+    https://www.gracemountain.ca/
+    https://kalaiaproducts.com/
+    https://avenaoriginals.com/
+    https://mayabath.com/
+    https://thepatchsmith.com/
+
+    ~~~~~~ Shopify ~~~~~~
+    https://www.silviatcherassi.com/
+    https://www.lunya.co/
+    https://www.routeone.co.uk/
+    https://wallofart.com/
+
+[17:55:07] 3-PSB:   https://overbeats.com.br/collections/produtos/products/overbeats-pro
+    https://cleanwith.plus/
+    https://shop.rogue.studio/
+    https://www.kookai.com.au/
+    https://whiterunway.com/
+    https://www.sheike.com.au/
+    https://necessaire.com/
+    http://keababies.com/
+    https://kimboonlinestore.com/
+    http://pbskids.org/
+
+    ~~~~~~~~ Websiste ~~~~~~~~~~
+    https://www.stelthgroup.com/
+    https://www.dreamyard.com/
+    https://livvnatural.com/
+    https://visawebservices.com/
+    https://www.inferscience.com/
+    https://alpha3cloud.com/
+    https://logisticsly.com/
+    https://lazaderm.com/
+    http://jiscojude.com/
+    https://www.iacircle.com/
+    https://friendlycity.club/
+    https://perfectstrangersofnyc.com/
+
+    ~~~~~~ ReactJS ~~~~~~
+    https://aversb.com/
+    https://kocner.primarent.sk/
+    https://argentwork.com/
+    https://www.superdrugmobile.com/
+    https://alumconnect.co/#/mentors
+    http://ss.stagingsdei.com:9065/#/
+    https://www.food.com/
+    
+
+
+    ~~~~~~React Native~~~~~~~~~~~~
+
+    -https://mannasermons.com/
+    https://apps.apple.com/us/app/manna-sermons-for-the-soul/id1596973599
+    https://play.google.com/store/apps/details?id=com.mannasermons.manna
+    -https://www.mind-easy.com/
+    https://apps.apple.com/us/app/mind-easy/id1628453321
+    https://play.google.com/store/apps/details?id=com.MindEasy.mindeasyall
+    -https://wheelbees.com/
+
+[17:55:07] 3-PSB:   https://apps.apple.com/us/app/wheelbees/id1585504248
+    https://play.google.com/store/apps/details?id=com.wheelbees
+    -https://app.koharconcert.com/
+    https://apps.apple.com/us/app/kohar/id1370922581
+    https://play.google.com/store/apps/details?id=com.mobileapp.kohar&hl=en&gl=US
+
+    https://apps.apple.com/us/app/queue-what-to-watch/id1554132853
+
+https://mannasermons.com/
+https://www.mind-easy.com/
+https://wheelbees.com/
+https://app.koharconcert.com/
+
+
+
+
+this is my github portfolio
+
+    https://spotdomain.netlify.app/
+
+this is Chat GPT URL
+
+    http://quizplein.nl/
+
+
+
+Scroll- animation.
+    https://qclay.design/
+
+
+    3d flip Book example
+    https://zachernuk.neocities.org/2021/gutenberg/
+    

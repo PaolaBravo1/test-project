@@ -1,0 +1,355 @@
+zjin7350@gmail.com/jiayou123       SeniorJsDev password  qweQWE123###
+
+
+yunfeizhang721@gmail.com/jiayou123    *   SmileFullStack         qweQWE321#@!
+
+
+spot.yc55@outlook.com////starSTAR123!@#
+
+
+spot.yc55@gmail.com////starSTAR123!@#
+
+alexanderkashirin1103@outlook.com//jiayou123     *
+
+zyingzhe183@gmail.com/jiayou123          		SmileEagleDev		qweQWE321#@!
+
+
+taichengz61@gmail.com/jiayou123
+
+alexkash1103@gmail.com/jiayou123!@#
+
+quizhang65@gmail.com/jiayou123
+
+
+zhangyingzhe62@gmail.com/jiayou123/re-spotyc55@gmail.com
+
+zhey38246@gmail.com/jiayou123/re-spot
+
+zy32821@gmail.com/jiayou123/re-spot  ------------------------
+
+spotwebyc63@gmail.com/jiayou123/re-zy32821@gmail *
+
+ycui19552@gmail.com/jiayou123/re-spot
+
+
+===================================
+
+
+
+
+cui94446@gmail.com/jiayou123/re-spotyc55@gmail.com
+
+cui21637@gmail.com/jiayou123/re spotyc55@gmail.com
+ycui44543@gmail.com/jiayou123/ re- spot.yc55@gmail.com
+yangc3296@gmail.com/jiayou123/re- spot.yc55@gmail.com
+yang16426@gmail.com	/jiayou123/ re- spot
+cui24439
+cuiyang931
+yangcui32
+cuiyang256
+yangcui938
+cuiy41904
+yangcui43
+
+devwebstar6@gmail.com/jiayou123 re 
+devrocket497@gmail.com/jiayou123 re spot.yc55@gmail.com
+jsdevninja@gmail.com/jiayou123 re spotwebyc63@gmail.com
+ninjajsdev@gmail.com/jiayou123 re spotwebyc63@gmail.com
+
+WilmerArteaga1103@gmail.com	/jiayou123 re zhangyingzhe62@gmail.com
+MarcoAntonioAG1103@gmail.com/ jiayou123 re spot.yc55@gmail.com
+jsdevninja229@gmail.com/jiayou123 re   spot.yc55@gmail.com
+jsdevn76@gmail.com/jiayou123    spot.yc55@gmail.com
+fulljs602@gmail.com/jiayou123    spot.yc55@gmail.com
+jsf93789@gmail.com/jiayou123    spot.yc55@gmail.com
+
+jsf93789@gmail.com
+
+trelloPW: wilmerarteaga123
+
+
+git@gitlab.com:early2/Early.git
+
+
+	sshCommand = ssh -i ~/.ssh/id_rsa
+	editor = atom
+
+[user]
+	email = paolasuxobravo@gmail.com
+	name = PaolaBravo1
+
+git 
+MarcoAntonioAG
+jiayouJIAYOU123!@#
+
+================= li 2 ===================
+
+cuiyang722@gmail.com
+
+jiayouJIAYOU123!@#
+
+
+mauricio301211@outlook.es
+jiayou123
+
+
+temp mail
+https://temp-mail.org/en/change
+
+niveg18681@silbarts.com
+
+adminADMIN123!@#
+340494
+
+===================aws=============
+
+spot.yc
+starSTAR123!@#
+spot.yc55@gmail.com
+
+
+
+af5098487@gmail.com
+jiayou123!@#
+
+
+
+================upwork join man===========
+
+Eimantas Kasperiunas //////   eim.kasp@gmail.com   ////// skype / live:.cid.350d169568142ee5
+
+rihane.alaa@gmail.com    Alaeddine RIHANE
+
+
+git remote remove origin
+
+git clone --bare remote_url.
+
+
+#!/bin/sh
+
+git filter-branch --env-filter '
+
+OLD_EMAIL="ms.huang.shumin@gmail.com"
+CORRECT_NAME="IsaiGalarza"
+CORRECT_EMAIL="isai.galarza@gmail.com"
+
+if [ "$GIT_COMMITTER_EMAIL" = "$OLD_EMAIL" ]
+then
+export GIT_COMMITTER_NAME="$CORRECT_NAME"
+export GIT_COMMITTER_EMAIL="$CORRECT_EMAIL"
+fi
+if [ "$GIT_AUTHOR_EMAIL" = "$OLD_EMAIL" ]
+then
+export GIT_AUTHOR_NAME="$CORRECT_NAME"
+export GIT_AUTHOR_EMAIL="$CORRECT_EMAIL"
+fi
+' --tag-name-filter cat -- --branches --tags
+
+git push --force --tags origin 'refs/heads/*'
+
+
+
+drive.google.com/file/d/1lQ9w06j877jZ2Wml7H98KeDvpCET3Yi/view
+
+
+drive.google.com/file/d/1tqu9GMsDNeS5037qLmVXZzh-oYSw5V4P/view
+https://drive.google.com/file/d/1tqu9GMsDNeS5037qLmVXZzh-oYSw5V4P/view?usp=share_link
+
+
+
+https://docs.google.com/document/d/1ZJj2eojYpe-s89Zw-4CU2n1AUJVV5vF5/edit?usp=share_link&ouid=113307308795026469349&rtpof=true&sd=true
+https://docs.google.com/document/d/1ZJj2eojYpe-s89Zw-4CU2n1AUJVV5vF5/edit?usp=share_link&ouid=113307308795026469349&rtpof=true&sd=true
+https://drive.google.com/file/d/1z1YnQhmJ_hDAKrr-ODCpw0rl2KV822H9/view?usp=share_link
+
+
+
+starSTAR123!@#111
+
+https://app.gitter.im/
+https://app.gitter.im/#/home
+https://app.gitter.im/#/room/!dEapDgdoQRnaKXJBNE:gitter.im (kashirin)
+https://matrix.to/#/@kashirin:matrix.org
+
+
+
+https://career.habr.com/experts
+
+https://www.typeform.com/signin/register-complete
+
+qweQWE123!@#
+
+https://community.typeform.com/inbox/conversation?with=23427
+
+https://codepen.io/webcyspot/pen/RwYXZOy
+webmaster951103
+
+
+https://account.forem.com/
+
+alex1103
+
+@alex
+user email spot.yc55@gmail.com
+spot.yc55-eejl@force.com
+
+
+https://login.bettermode.com/
+
+alexkash1
+Fiver
+danielrobin@teml.net
+
+https://codefile.io/f/w2VE7YHcbcJfweoSfvKH
+
+https://spotdomain.netlify.app/
+
+
+
+Hello.
+How are you?
+Could you please check this?
+https://docs.google.com/document/d/1S4ZoIYUUOk97lXkyCiDprEeUNUL2A0OtAixU0fH6zcQ/edit?usp=sharing
+
+Looking forward to hearing from you.
+Best Regards.
+
+Hello.
+How are you?
+Could you please check this?
+https://www.figma.com/file/ZSf9dN5OwTvTGdyqDBM4Zh/Untitled?node-id=0%3A1&t=r25hUQZbkzX0QUok-1
+
+Looking forward to hearing from you.
+Best Regards.
+
+
+Hello Everyone.
+Could you please check this?
+https://docs.google.com/document/d/1S4ZoIYUUOk97lXkyCiDprEeUNUL2A0OtAixU0fH6zcQ/edit?usp=sharing
+
+Looking forward to hearing from you.
+Best Regards.
+
+
+
+
+
+
+
+https://docs.google.com/document/d/1S4ZoIYUUOk97lXkyCiDprEeUNUL2A0OtAixU0fH6zcQ/edit?usp=sharing
+
+Hello Nice to meet you?
+I am a javascript developer
+I would like to establish a relationship with you.
+I'd like to work for my business new business.
+
+Sounds good.
+Would you please give me a chance to present my portfolio to you?
+This is my portfolio.
+https://spotdomain.netlify.app/
+If you have any question please let me know.
+
+
+
+I've always followed the popular saying, "actions speak louder than words".
+I would like to establish a relationship with you.
+
+I would like to establish a friendship with you.
+
+abbreviation
+
+We are not allowed to share our social profiles. However You can see a few of my recent projects in my portfolio 👉 www.ibrahimarif.dev
+
+
+
+
+
+if you agree, you will get the long-term contract (2~3 years) and you can earn some without simple work.
+Could you please check this?
+https://docs.google.com/document/d/1Lv6lzihdNmfGJREaGRAVNUGcbtNPdffA2QK7Z3XWucQ/edit
+
+
+
+Freelancer.
+tampermonkey.
+freelancer notification.
+freelancer helper
+freelancer autobidding how-to-install.
+
+
+//registry.npmjs.org/:_authToken=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
+
+
+
+
+
+dovaxe7598@sesxe.com
+norobe1430@vip4e.com
+fifas69456@tenjb.com
+latil16511@ipnuc.com
+lapiy59549@ipnuc.com   18
+danife5957@viicard.com
+misoric183@viicard.com
+vacer87209@viicard.com
+vemeve3290@utwoko.com
+wicixa2803@tenjb.comc
+nokovid467@vip4e.com
+waciy73484@tenjb.com
+kivevan663@docwl.com
+fimesi3209@picvw.com
+
+
+As you know, this week I have assigned 5+ repositories and 10+ branches allocated for all your projects.
+So I need to check all your project source code carefully.
+But it took a lot of time, so I worked full time until midnight.
+I've been very busy with your project this week.
+Finally I understood all the logic and code structure of your project.
+Then we can improve the development speed next week.
+I understand your situation I must lunched your project within November 1.
+
+
+
+https://www.emailnator.com/
+
+
+sudo nmcli networking off
+
+rand@wiscontrol.com
+albert@wiscontrol.com
+
+
+Console sign-in URL
+
+
+
+https://wiscontrol.signin.aws.amazon.com/console
+https://us-east-2.console.aws.amazon.com/console/home?region=us-east-2#
+
+
+User name
+
+
+
+ysai
+
+
+
+Console password
+
+qweQWE123!@#
+
+u5Z1j)
+
+https://wiscontrol.signin.aws.amazon.com/console
+
+Pipeline:
+https://us-east-1.console.aws.amazon.com/codesuite/codepipeline/pipelines/ix7-api/view?region=us-east-1
+
+
+
+Server:
+https://us-east-1.console.aws.amazon.com/elasticbeanstalk/home?region=us-east-1#/environment/dashboard?environmentId=e-4qpwi3nua8
+
+
+
+    "postinstall": "node ./package/hummus/OSdetect.js",

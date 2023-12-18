@@ -1,0 +1,87 @@
+Hello there! Before talking about qualifications and professional abilities, I would like to introduce myself.
+I am Devid Buffelo and I am from United States.
+Taking web development as a profession not only fulfils my pocket but also my heart because it has been my passion since my early teenage.
+
+I believe that people should do things in which they are good at or in which their heart lays.
+That’s why I chose freelance web development as my career because I believe I’m good at this and mas I am always honest and I am never afraid of doing hard work.
+
+I have finished my graduation from The University of on Computer Science Engineering and I have taken many lessons on modern web designing from famous institutions.
+My education background allowed me to thrive in this career and my trainings on this have made me a master of this section.
+
+I am very much expert in using both Swift & Objective C.
+I also know the use of Kotlin and Java for iPhone, iPod, Android and Tablet.
+I have developed various websites to optimize their search engines and to create easier user interfaces.
+
+Recently, I have designed a website that helps its users to know about how they should utilize their free time and that very website has become very popular among students.
+
+This is just one of my success stories as a freelance web developer. I am sure that if you hire me, I will present you many successful projects with minimal efforts from your side.
+
+
+
+
+Hello, this is (write down your name). I am a professional back-end web developer and have been working in this field for 7 long years.
+
+I have a bachelor’s degree in Software Engineering from the university of (write down the name of your university and if not have any, then just pass) and a coursework in graphic design.
+
+I have already earned a lot quantity of popularity by creating many famous websites. Recently, some of my created websites got many responses from the clients and here is the attachment (mention some of your work).
+
+I have solid knowledge in programming and graphic designing and my works are not only enchanting but also integrated with graphics, video, and audio. I am also skilful in problem solving methods and acquainted with computer languages like Python, PHP, CSS, XML, HTML, HTML5, SQL, JavaScript and multimedia publishing tools like Flash and Photoshop.
+
+Besides, my websites are SEO friendly because it did not fail to satisfy the users. Again, I keep myself up to date with new technologies and its uses, new tools and computer languages so that I can give my level best to my clients.I believe in hardship and hiring me would not fail your decision. Thank you.
+
+
+
+
+
+A seasoned Full Stack Engineer with extensive experience in both frontend and backend languages, I'm passionate about crafting UIs that provide exceptional user experiences. 
+I have a love for architecture design and have built fully scalable applications using a variety of languages, tech stacks, and methodologies.
+
+With a proven track record of creative problem-solving and mentorship, I excel in delivering solid solutions within tight timelines. Whether it's a straightforward project or a complex challenge, you can count on me to quickly pick up and learn new skills, even when there isn't a clear solution in sight.
+
+I'm a full-stack developer with over 10+years of experience in building high-quality web applications for clients worldwide. I deliver clean, scalable and maintainable code. Good UX & project management skills. I focus on business needs first. I work with clients of any scale: from startups & small teams to enterprise.
+
+In today's world, every business needs to connect with its customers, and we help build tools that help business owners do that. My goal is to create a successful project with you. We’re very interested in mutual success.
+
+I have helped various startups in the past few years to kick-start their project right from the concept level by building websites in the JavaScript environment. I owe all my success to the clients I have worked for, so my goal is always to keep them satisfied and happy with whatever work I do.
+
+
+I have worked on several projects and have extensive experience in application development in areas such as:
+
+Frontend web and mobile development skills:
+- React / Next.js / Gatsby.js
+- Vue / Nuxt.js / Vuex / Vue bootstrap
+- React Native/ Ionic/ Flutter
+- HTML5 / CSS3, SCSS / LESS, Canvas, JQuery
+- ES6, ES7 / JSX / Babel / Webpack
+- Redux Thunk, Redux saga, Redux for Javascript, MobX
+- Headless CMS, Contentful, Strapi, Prsimic, Gatsby, JAMStack
+- Netlify, Heroku, AWS, Firebase, Vercel
+- Hook, Context, Refs, Code spliting
+- Reactstrap, Reactbootstrap, BS4, Material UI, Semantic UI and Antd, Styled component, Tailwind CSS, Bootstrap , Material-UI
+- Typescript, GraphQL
+- Testing with Jest
+
+
+Backend development skills
+- PHP / Laravel
+- Node.js / Express.js / Next.js
+- Python / Django / Flask
+- Ruby on Rails
+
+Database:
+- MySQL, MongoDB, PostgreSQL, NoSQL
+
+However, I've also worked with a wide range of languages throughout my career. While I don't chase every new trend, I believe in staying up-to-date with modern technologies and methodologies.
+
+My experience developing user-friendly solutions on time and on budget would enables to bring value to your business.
+
+React and Node development is my passion and what I do best at.
+The most important thing is a successful outcome.
+
+I am an experienced, motivated, and creative Javascript developer with extensive experience in designing and building innovative technology solutions for over 10 years.
+
+I'm excited to get the chance to help bring your ideas to life, and want to let you know that for me, the most important thing is a successful outcome.
+
+I focus on writing idiomatic, scalable, and accessible code while prioritizing teamwork and collaboration with others as a part of my workflow. I want to make a positive impact in people's lives through web development.
+
+

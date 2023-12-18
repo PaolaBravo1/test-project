@@ -1,0 +1,2141 @@
+(function ($) {
+    $.fn.showModel = function (para, callback) {
+
+        // var pref = 'NewTextures/';
+
+        var reduc = 0.5;
+        var svg;	// this is for calculating point in camera curve path position
+        var main = this;
+        var elemID = "";
+        var cube = null;
+        var camera;
+        var renderer, container, scene, controls;
+        var ground, canvas;
+        var curView = 0;
+        var lights = [];
+        var shadowMesh;
+        var canvarsInfo = {};
+        var jsonInfo = {};
+        var delineimg ="";
+        var engineBox = "";
+        var engineCanvas = "";
+        // based on box size 7,1.25,5.5;
+        var arViews = [{ x: 20, y: 25, z: 45 }, { x: -45, y: 25, z: 20 }, { x: 45, y: 25, z: -20 },
+            { x: 10, y: 45, z: 20 },
+            { x: -15, y: -45, z: 25 },
+            { x: -20, y: 25, z: -45 }];
+        /*     var arViews=[{x:20, y:25, z:45},{x:-45, y:25, z:20},{x:45, y:25,z:-20},
+        {x:10, y:45, z:20},
+        {x:10, y:-45, z:-20},
+        {x:-20, y:25, z:-45}];*/
+        // this is the obj original size. this var should never be changed unless the original obj size changes
+        var originalObjSize = { x: 33.216880798339844, y: 17.070280075073242, z: 6.8857288360595685 };
+        if (para == 'rsc') originalObjSize = { x: 33.2, y: 33.2, z: 33.2 };
+        var maxDimension = 0.8;	// the max portion of the view the object can take
+        var objectFileName = "BOX_MAILER_CLOSED_01.obj";
+        var materialFileName = "BOX_MAILER_CLOSED_01_glossy.mtl";
+
+        //These are the updated files, but they don't look okay, maybe we need to update the code.
+        // var objectFileName2 = "Box_Unwrap_v07.obj";
+        // var materialFileName2 = "Box_Unwrap_v07.mtl";
+
+        //These are the old files for the RSC BOX it looks good but the guiding for the coloring is not accurate
+        var objectFileName2 = "LowPoly_Box_v03.obj";
+        var materialFileName2 = "LowPoly_Box_v03.mtl";
+
+        var arMaterials = [
+            { "Name": "kraft", "imageFile": "packaging_diffuse_brown_nocorr.jpg", "texture": null },
+            { "Name": "kraft-s", "imageFile": "texture2x.jpg", "texture": null },
+            { "Name": "glossy-c", "imageFile": "carton-glossy.png", "texture": null },
+            { "Name": "glossy", "imageFile": "packaging_diffuse_white_nocorr_NEW6.png", "texture": null },
+            { "Name": "white", "imageFile": "carton-white.png", "texture": null },
+            { "Name": "white-m", "imageFile": "packaging_diffuse_white_nocorr_4.jpg", "texture": null },
+            { "Name": "white-rsc", "imageFile": "rsc_standard_white.jpg", "texture": null },
+            { "Name": "premium-white-rsc", "imageFile": "rsc_premium_white.png", "texture": null },
+
+            { "Name": "matte", "imageFile": "carton-glossy.png", "texture": null },
+
+            { "Name": "topShadow", "imageFile": "shadow_texture_full_1.png", "texture": null },
+            { "Name": "topShadow2", "imageFile": "full2x6flapsShadow.png", "texture": null },
+            { "Name": "topShadow-s", "imageFile": "shipping-shadow.png", "texture": null }
+        ];
+
+        var curBoxInd = 2;
+        // var modelPath="/model/NewBox/";
+        var modelPath = "https://cdn.shopify.com/s/files/1/0591/6236/1993/files/";
+        // var lCube = null;
+        var canvasFaces = {
+            'kraft': null,
+            'glossy': null,
+            'white': null,
+            'glossy-c': null,
+            'white-m': null,
+            'white-rsc': null,
+            'premium-white-rsc': null,
+            'matte': null,
+            'front': null,
+            'all': null,
+            'left': null,
+            'right': null,
+            'top': null,
+            'bottom': null,
+            'top-b': null,
+            'bottom-b': null,
+            'back': null,
+            'topShadow': null,
+            'topShadow2': null,
+            'kraft-s': null,
+            'topShadow-s': null,
+        };
+        var context = null;
+        var contextDieline = null;
+        // var cnvsCube = null;
+        var gl = 9;
+        var gw = 7;
+        var gh = 2;
+        var zoom = 0.6, inc = -0.05, fvo = null;
+        var canvasMap = null;
+        var canvasDieline = null;
+        // var foundTextureX=null;
+        var bumpMap;
+        var normalMap;
+        var flagLoadFirst = true;
+        var pauseAnimFalg = true;
+
+        main.init = function () {
+            elemID = $(this).attr("id");
+
+            function loadBox() {
+
+                return new Promise(function (resolve, reject) {
+                    initScene();
+                    initCamera();
+                    resolve();
+                }).then(function () {
+                    console.log('555');
+                    return new Promise(function (resolve, reject) {
+                        renderer = initRenderer();
+                        initLights();
+                        resolve();
+                    });
+                }).then(function () {
+                    console.log('555');
+
+                    return new Promise(function (resolve, reject) {
+                        initElement();
+                        resolve();
+                    });
+                }).then(function () {
+                    console.log('555');
+
+                    return new Promise(function (resolve, reject) {
+                        initGround();
+                        resolve();
+                    });
+                }).then(function () {
+                    console.log('555');
+
+                    return new Promise(function (resolve, reject) {
+                        initCanvasMap();
+                        resolve();
+                    });
+                }).then(function () {
+                    console.log('555');
+
+                    return new Promise(function (resolve, reject) {
+                        initFaceCanvas();
+                        resolve();
+                    });
+                }).then(function () {
+                    console.log('555');
+
+                    return new Promise(function (resolve, reject) {
+                        initTextures()
+                          .then(resolve)
+                          .catch(reject);
+                    });
+                }).then(function () {
+                    console.log('555');
+                    return new Promise(function (resolve, reject) {
+                        initBumpNormalMap();
+                        resolve();
+                    });
+                }).then(function () {
+                    console.log('555');
+
+                    return new Promise(function (resolve, reject) {
+                        console.log('555');
+                        initObjects();
+                        resolve();
+
+                    });
+                }).then(function () {
+                    return new Promise(function (resolve, reject) {
+                        render();
+                        main.reInitOnContextLost();
+                        resolve();
+                    });
+                }).then(function () {
+                    setTimeout(function () {
+                        jQuery('.bubble.is-active').trigger('mouseenter');
+                    }, 5000);
+                }).catch(function (error) {
+                    console.log('Error in promise: ', error);
+                });
+            }
+            loadBox();
+        };
+
+        main.reInitOnContextLost = function () {
+            /*
+             * This function is meant to be the one responsible for reinit the application
+             * in the face of a loss of context.
+             */
+            var canvasElements = document.getElementsByTagName("CANVAS");
+
+            for (var i = 0; i < canvasElements.length; i++) {
+                canvasElements[i].addEventListener("webglcontextrestored", function (event) {
+                    console.log('CONTEXT LOST');
+                }, false);
+            }
+        }
+
+        initCamera = function () {
+            main.screen_width = Math.ceil($("#" + elemID).width()) * 2;
+            main.screen_height = Math.ceil($("#" + elemID).height()) * 2;
+            svg = d3.select("div.zoom")
+              .append("svg")
+              .attr("display", "none")
+              .attr("width", 100)
+              .attr("height", 100);
+            // take the min dimension to make the viewer square. as per packlane
+            if (main.screen_width > main.screen_height)
+                main.screen_width = main.screen_height;
+            // aspect ratio for viewer should always be 1 as per packlane. All calculations are based on this
+            var ASPECT = main.screen_width / main.screen_height;
+            camera = new THREE.PerspectiveCamera(45, ASPECT, 0.1, 1000);
+            setCameraPosition(0);
+
+            camera.lookAt(scene.position);
+            scene.add(camera);
+
+        };
+
+        main.getRenderer = function () {
+            return renderer;
+        };
+
+
+        main.doRotation = function (e, drag) {
+            if (!drag.isDragging) {
+                return false;
+            }
+
+            var tweens = TWEEN.getAll();
+
+            if (tweens.length > 0) {
+                return false;
+            }
+
+            var deltaMove = {
+                x: e.offsetX - drag.previousMousePosition.x,
+                y: e.offsetY - drag.previousMousePosition.y
+            };
+
+            var x = parseInt(camera.position.x),
+              y = parseInt(camera.position.y),
+              z = parseInt(camera.position.z);
+
+            /*    console.log('------');
+                console.log('x ' + x);
+                console.log('y ' + y);
+                console.log('z ' + z);*/
+
+            var currentPos = drag.curPos;
+            var speed = 4;
+
+            if (deltaMove.x > speed * 2) {
+                deltaMove.x = speed * 2;
+            }
+            else if (deltaMove.x < speed * -2) {
+                deltaMove.x = speed * -2;
+            }
+            if (deltaMove.y > speed) {
+                deltaMove.y = speed;
+            }
+            else if (deltaMove.y < -speed) {
+                deltaMove.y = -speed;
+            }
+
+            var orientationTreshold = 7;
+            if (drag.orientation == false && drag.isDragging) {
+                if (Math.abs(drag.origin.x - e.offsetX) >= orientationTreshold) {
+                    drag.orientation = 'x';
+                }
+                else if (Math.abs(drag.origin.y - e.offsetY) >= orientationTreshold) {
+                    drag.orientation = 'y';
+                }
+            }
+            else if (drag.isDragging) {
+                if (drag.orientation == 'x') {
+                    //Horizontal mouse movement
+                    if (drag.previousMousePosition.x - e.offsetX != 0) {
+                        //Rotate camera to the new position
+                        if (currentPos !== 'top' && currentPos !== 'bottom') {
+                            //Normal rotation
+                            camera.position.x = camera.position.x - camera.position.z * Math.sin(deltaMove.x * drag.rotationSpeed * 0.02);
+                            camera.position.z = camera.position.z + camera.position.x * Math.sin(deltaMove.x * drag.rotationSpeed * 0.02);
+                        }
+                        else {   //Anition from top/bottom to right or left
+                            if (currentPos === 'top') {
+
+                                if (x - deltaMove.x >= 10 && x - deltaMove.x < 45) {
+                                    //top to right
+                                    camera.position.y = camera.position.y + (deltaMove.x * drag.rotationSpeed / speed);
+                                    camera.position.x = camera.position.x - (deltaMove.x * drag.rotationSpeed * 1.75 / speed);
+                                    camera.position.z = camera.position.z + (deltaMove.x * drag.rotationSpeed / 2);
+                                }
+                                else if (x - deltaMove.x <= 10 && x - deltaMove.x > -45) {
+                                    camera.position.y = camera.position.y - (deltaMove.x * drag.rotationSpeed / speed);
+                                    camera.position.x = camera.position.x - (deltaMove.x * drag.rotationSpeed * 2.8 / speed);
+                                }
+                            }
+                            else {
+                                //bottom to right or left
+                                if (x - deltaMove.x >= -15 && x - deltaMove.x < 45) {
+                                    camera.position.y = camera.position.y - (deltaMove.x * drag.rotationSpeed);
+                                    camera.position.x = camera.position.x - (deltaMove.x * drag.rotationSpeed) / 1.11;
+                                    camera.position.z = camera.position.z + (deltaMove.x * drag.rotationSpeed) / 1.5;
+                                }
+                                else if (x - deltaMove.x <= -15 && x - deltaMove.x > -45) {
+                                    camera.position.y = camera.position.y + (deltaMove.x * drag.rotationSpeed);
+                                    camera.position.x = camera.position.x - (deltaMove.x * drag.rotationSpeed) / 2.2;
+                                    camera.position.z = camera.position.z - (deltaMove.x * drag.rotationSpeed) / 13.5;
+                                }
+                            }
+                        }
+                    }
+                }
+                else if (drag.orientation == 'y') {
+                    //Vertical
+                    if (drag.previousMousePosition.y - e.offsetY != 0) {
+                        //camera.position.y = y + (deltaMove.y * drag.rotationSpeed); //old version
+                        if (currentPos === 'front' || currentPos === 'top' || currentPos === 'bottom') //front top or bottom
+                        {
+                            if (y >= 25) {
+                                if (y + deltaMove.y <= 45) {
+                                    camera.position.y = camera.position.y + (deltaMove.y * drag.rotationSpeed);
+                                    camera.position.x = camera.position.x - (deltaMove.y * drag.rotationSpeed / 2);
+                                    camera.position.z = camera.position.z - (deltaMove.y * drag.rotationSpeed) - (deltaMove.y * drag.rotationSpeed) / 4;
+                                }
+                            }
+                            else if (y < 25) {
+                                if (y + deltaMove.y >= -45) {
+                                    camera.position.y = camera.position.y + (deltaMove.y * drag.rotationSpeed);
+                                    camera.position.x = camera.position.x + (deltaMove.y * drag.rotationSpeed / 2);
+                                    camera.position.z = camera.position.z + (deltaMove.y * drag.rotationSpeed) / 3;
+                                }
+                            }
+                        }
+                        else if (currentPos === 'back') { //back -> top or bottom
+                            if (y >= 25) {
+                                if (y + deltaMove.y <= 45) { //to top
+                                    if (camera.position.y < 30) {
+                                        camera.position.y = camera.position.y + (deltaMove.y * drag.rotationSpeed / 8);
+                                        camera.position.x = camera.position.x + (deltaMove.y * drag.rotationSpeed * 1.6 / 2);
+                                        camera.position.z = camera.position.z + (deltaMove.y * drag.rotationSpeed) * 3.45 / 4;
+                                    }
+                                    else {
+                                        camera.position.y = camera.position.y + (deltaMove.y * drag.rotationSpeed / 5);
+                                        //camera.position.x = camera.position.x + (deltaMove.y * drag.rotationSpeed / 50);
+                                        camera.position.z = camera.position.z + (deltaMove.y * drag.rotationSpeed) * 0.45;
+                                    }
+
+                                }
+                            }
+                            else if (y < 25) {
+                                if (y + deltaMove.y >= -45) { //to bottom
+                                    camera.position.y = camera.position.y + (deltaMove.y * drag.rotationSpeed);
+                                    camera.position.x = camera.position.x - (deltaMove.y * drag.rotationSpeed) / 10;
+                                    camera.position.z = camera.position.z - (deltaMove.y * drag.rotationSpeed);
+                                }
+                            }
+                        }
+                        else if (currentPos === 'left') { //left -> top or bottom
+                            if (y >= 25) {
+                                if (y + deltaMove.y <= 45) { //to top
+                                    camera.position.y = camera.position.y + (deltaMove.y * drag.rotationSpeed / 2);
+                                    camera.position.x = camera.position.x + (deltaMove.y * drag.rotationSpeed * 1.5);
+                                }
+                            }
+                            else if (y < 25) {
+                                if (y + deltaMove.y >= -45) { //to bottom
+                                    camera.position.y = camera.position.y + (deltaMove.y * drag.rotationSpeed);
+                                    camera.position.x = camera.position.x - (deltaMove.y * drag.rotationSpeed) / 2.2;
+                                    camera.position.z = camera.position.z - (deltaMove.y * drag.rotationSpeed) / 13.5;
+                                }
+                            }
+                        }
+                        else if (currentPos === 'right') { //right -> top or bottom
+                            if (y >= 25) {
+                                if (y + deltaMove.y <= 45) { //to top
+                                    camera.position.y = camera.position.y + (deltaMove.y * drag.rotationSpeed / 2);
+                                    camera.position.x = camera.position.x - (deltaMove.y * drag.rotationSpeed);
+                                    camera.position.z = camera.position.z + (deltaMove.y * drag.rotationSpeed);
+                                }
+                            }
+                            else if (y < 25) {
+                                if (y + deltaMove.y >= -45) { //to bottom
+                                    camera.position.y = camera.position.y + (deltaMove.y * drag.rotationSpeed);
+                                    camera.position.x = camera.position.x + (deltaMove.y * drag.rotationSpeed) / 1.11;
+                                    camera.position.z = camera.position.z - (deltaMove.y * drag.rotationSpeed) / 1.5;
+                                }
+                            }
+                        }
+                        if (camera.position.y > 45) {
+                            camera.position.y = 45;
+                        }
+                        else if (camera.position.y < -45) {
+                            camera.position.y = -45;
+                        }
+                        if (camera.position.z > 45) {
+                            camera.position.z = 45;
+                        }
+                        else if (camera.position.z < -45) {
+                            camera.position.z = -45;
+                        }
+                        if (camera.position.x > 45) {
+                            camera.position.x = 45;
+                        }
+                        else if (camera.position.x < -45) {
+                            camera.position.x = -45;
+                        }
+                    }
+                }
+                camera.lookAt(scene.position);
+            }
+        }
+
+        main.finishRotation = function (drag) {
+            if (!drag.isDragging) {
+                return;
+            }
+            //Calculate closest perspective
+            var closest = 0; //default is front
+            var vector = camera.getWorldDirection();
+            var theta = Math.atan2(vector.x, vector.z);
+
+            if (camera.position.y > 35) {
+                closest = 3; //closest if top
+            }
+            else if (camera.position.y < -9) {
+                closest = 4; //closest is bottom
+            }
+            else if (theta >= -2 && theta < -0.3) {
+                closest = 2; //right
+            }
+            else if (theta >= -0.3 && theta < 1.15) {
+                closest = 5; //back
+            }
+            else if (Math.abs(theta) >= 2.75) {
+                closest = 0; //front
+            }
+            else if (theta >= 1.15 && theta < 2.75) {
+                closest = 1; //left 
+            }
+            return closest;
+        }
+
+        initRenderer = function () {
+            try {
+                renderer = new THREE.WebGLRenderer({
+                    antialias: true,
+                    alpha: true,
+                    preserveDrawingBuffer: true
+                });
+            } catch (err) {
+                swal('Please make sure you have accelerated graphic support enabled')
+                  .then(() => window.location.assign('/'));
+            }
+
+            renderer.setSize(main.screen_width, main.screen_height);
+            renderer.setPixelRatio(window.devicePixelRatio);
+            renderer.setClearColor(0x000000, 0);
+
+            renderer.gammaInput = true;
+            renderer.gammaOutput = true;
+            renderer.shadowMap.enabled = true;
+            renderer.shadowMapCascade = true;
+            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+            renderer.shadowMap.renderReverseSided = false;
+            return renderer;
+        };
+
+        initElement = function () {
+            canvas = document.getElementById(elemID).appendChild(renderer.domElement);
+            // hacky way to set style but have no access to app.css
+            d3.select(canvas)
+              .style("padding-left", 0)
+              .style("padding-right", 0)
+              .style("margin-left", "auto")
+              .style("margin-right", "auto")
+              .style("display", "block");
+        }
+
+        initScene = function () {
+            scene = new THREE.Scene();
+        }
+
+        function setCameraPosition2(newX, newY, newZ) {
+            camera.position.set(newX, newY, newZ);
+        }
+
+        function setCameraPosition(idx) {
+            camera.position.set(arViews[curView].x, arViews[curView].y, arViews[curView].z);
+        }
+        function initLights() {
+            if (para == 'rsc') {
+                // add subtle ambient lighting
+                var ambientLight = new THREE.AmbientLight(0xffffff, 1.6);
+                ambientLight.castShadow = false;
+                scene.add(ambientLight);
+            } else {
+                // add subtle ambient lighting
+                var ambientLight = new THREE.AmbientLight(0xffffff, 1.7);
+                ambientLight.castShadow = false;
+                scene.add(ambientLight);
+
+                // TODO: directional lightning
+            }
+
+        }
+
+        function initGround() {
+            //TODO: Check from where this fuction is called 
+        }
+
+        main.switchView = function (mode, manual) {
+            manual = typeof manual !== 'undefined' ? manual : false;
+            //console.log("switchview called")
+            var idx = 0;
+            switch (mode) {
+                case "front": //front
+                    idx = 0;
+                    break;
+                case "left": //left
+                    idx = 1;
+                    break;
+                case "right": //right 
+                    idx = 2;
+                    break;
+                case "top": //top
+                    idx = 3;
+                    break;
+                case "bottom": //bottom
+                    idx = 4;
+                    break;
+                case "back": //back
+                    idx = 5;
+                    break;
+                case "all": //all
+                    idx = 6;
+                    break;
+            }
+
+            //if(idx!=curView)
+            setBoxView(idx, manual);
+        };
+
+        function setBoxView(idx, manual) {
+
+            manual = typeof manual !== 'undefined' ? manual : false;
+
+            var tweens = TWEEN.getAll();
+
+            if (tweens.length > 0) {
+                for (var i = 0; i < tweens.length; i++) {
+                    tweens[i].stop();
+                }
+                manual = true;
+            }
+
+            var newPos = new THREE.Vector3(arViews[idx].x, arViews[idx].y, arViews[idx].z);
+            if (!manual) {
+                //Rotates from one view to another
+                var curPos = new THREE.Vector3(arViews[curView].x, arViews[curView].y, arViews[curView].z);
+            }
+            else {
+                //Rotates from mouse position to the closest  view
+                var curPos = new THREE.Vector3(camera.position.x, camera.position.y, camera.position.z);
+            }
+
+            // top to bottom or bottom to top
+            /*  if((curView ==3 && idx ==4) || ( idx ==3 && curView ==4)){
+                  console.log("top to bottom");
+                  // find the angle of the  2 points
+                  var dx = newPos.z;
+                  var dy = newPos.y;
+                  var dAngle = Math.atan2(-dx,dy);
+                  if (dAngle < 0)
+                      dAngle += 2*Math.PI;
+                  var newPosAngle = dAngle;
+                  var dx = curPos.z;
+                  var dy = curPos.y;
+                  dAngle = Math.atan2(-dx,dy);
+                  if (dAngle < 0)
+                      dAngle += 2*Math.PI;
+                  var curPosAngle = dAngle;
+                  console.log("to=", newPosAngle, " From=", curPosAngle, " diff=", Math.abs(newPosAngle-  curPosAngle));
+                  var oppSide = Math.sqrt(Math.pow(curPos.x,2)+Math.pow(curPos.z,2));
+                  var radius = Math.sqrt(Math.pow(curPos.y,2)+Math.pow(oppSide,2));
+                  var tween = new TWEEN.Tween({x:curPos.x, y:curPos.y} ).to({x:newPos.x, y:newPos.y},1000)
+                  //.easing(TWEEN.Easing.Linear.None)
+                      .easing(TWEEN.Easing.Exponential.Out)
+                      .onUpdate(function () {
+                          // calc y first based on z changes and constant radius value
+                          camera.position.y = this.y;
+                          var newOppSide = Math.sqrt(Math.pow(radius,2) -  Math.pow(camera.position.y,2));
+                          camera.position.z = Math.sign(this.y) * Math.sqrt(Math.pow(newOppSide,2) -  Math.pow(camera.position.x,2));
+                          camera.position.x = this.x;
+                          console.log(camera.position);
+  //              camera.fov = getFOV(radius);
+  //              camera.updateProjectionMatrix();
+                          camera.lookAt(scene.position);
+                      })
+                      .onComplete(function () {
+                          //camera.lookAt(scene.position);
+                          curView=idx;
+                      }).start();
+                  // use this method only for the top or bottom views
+              }else*/ //disabled to fix the extra rotation bug
+
+            if ((curView == 3 || curView == 4 || idx == 3 || idx == 4)) {
+
+                var tween = new TWEEN.Tween(camera.position).to(arViews[idx], 750)
+                  //          .easing(TWEEN.Easing.Exponential.In)
+
+                  //.easing(TWEEN.Easing.Exponential.Out)
+                  .easing(TWEEN.Easing.Quadratic.InOut)
+                  .onUpdate(function () {
+                      camera.lookAt(scene.position);
+                  })
+                  .onComplete(function () {
+                      curView = idx;
+                      setCameraPosition(curView);
+                      //camera.lookAt(scene.position);
+                      console.log(camera.position);
+                  }).start();
+            } else { // use this method only for the front,left, right and back side views
+                // find the angle of the  2 points
+                //  console.log('side');
+                var dx = newPos.z;
+                var dy = newPos.x;
+                var dAngle = Math.atan2(-dy, dx);
+                //      if (dAngle < 0)
+                dAngle += 2 * Math.PI;
+                var newPosAngle = dAngle
+                var dx = curPos.z;
+                var dy = curPos.x;
+                dAngle = Math.atan2(-dy, dx);
+                //if (dAngle < 0)
+                dAngle += 2 * Math.PI;
+                var curPosAngle = dAngle;
+                //console.log("to=", newPosAngle, " From=", curPosAngle, " diff=", Math.abs(newPosAngle-  curPosAngle));
+                // if the turn is more than 180deg, go the other way
+                if (Math.abs(newPosAngle - curPosAngle) > Math.PI + 0.1) {
+                    if (curPosAngle > newPosAngle)
+                        curPosAngle -= 2 * Math.PI;
+                    else
+                        newPosAngle -= 2 * Math.PI;
+                    console.log("special case", curPosAngle, newPosAngle);
+                }
+                var radius = Math.sqrt(Math.abs(newPos.x * newPos.x) + Math.abs(newPos.z * newPos.z));
+                // create an equivalent SVG bezier path to place the camera rotational view
+                svg.select("g").remove();
+                var arc = d3.svg.arc()
+                  .innerRadius(radius)
+                  .outerRadius(radius + 1)
+                  .startAngle(curPosAngle)
+                  .endAngle(newPosAngle);
+
+                var curvePath = svg.append("g").attr("transform", "translate(50,50) scale(1,-1)")
+                  .append("path")
+                  .attr("id", "testPath")
+                  .attr("fill", "transparent")
+                  .attr("stroke", "black")
+                  .attr('d', function () {
+                      var d = arc();
+                      return d.split('L')[0]; //will return half of arc without lines
+                  });
+                var len = curvePath.node().getTotalLength();
+                var tween = new TWEEN.Tween({ pathLength: 0 }).to({ pathLength: len }, 1250)
+                  //.easing(TWEEN.Easing.Linear.None)
+                  .easing(TWEEN.Easing.Exponential.Out)
+                  //.easing(TWEEN.Easing.Exponential.InOut)
+                  .onUpdate(function () {
+                      var curPoint = curvePath.node().getPointAtLength(this.pathLength);
+                      camera.position.x = -curPoint.x;
+                      camera.position.z = -curPoint.y;
+                      //console.log(this.pathLength, camera.position);
+                      //camera.fov = getFOV();
+                      //console.log(camera.fov);
+
+                      //camera.updateProjectionMatrix();
+                      camera.lookAt(scene.position);
+                      //}
+                  })
+                  .onComplete(function () {
+                      curView = idx;
+                      //setCameraPosition(curView);
+                      //console.log(camera.position);
+                  }).start();
+
+                if (manual) {
+                    //Fixes manual rotation on y-axis
+                    var tween = new TWEEN.Tween({ y: curPos.y }).to({ y: newPos.y }, 500)
+                      .easing(TWEEN.Easing.Linear.None)
+                      .onUpdate(function () {
+                          camera.position.y = this.y;
+                          var newOppSide = Math.sqrt(Math.pow(radius, 2) - Math.pow(camera.position.y, 2));
+                          camera.lookAt(scene.position);
+                      })
+                      .onComplete(function () {
+                          curView = idx;
+                      }).start();
+                }
+            }
+        }
+        // main.switchMaterial = function(value){console.log('DOSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS')
+        //     console.log("switch material=",value);
+        //     var bLoaded=true;
+        //     arMaterials.forEach(function(obj){
+        //         if(obj.texture==null)
+        //             bLoaded=false;
+        //     });
+        //     if(!bLoaded){
+        //         alert("not loaded yet");
+        //         return;
+        //     }
+        //     // look for the texture object to us
+        //     var foundTexture=null;
+        //     arMaterials.forEach(function(obj){
+        //         if(value == obj.Name){
+        //             console.log("found", obj);
+        //             foundTexture=obj.texture;
+        //             // foundTextureX=obj.imageFile;
+        //         }
+        //     });
+        //     if(foundTexture!=null){
+        //         if(cube.children[0]){
+        //             cube.children[0].material.map=foundTexture;
+        //             cube.children[0].material.map.needsUpdate = true;
+        //         }else {
+        //             cube.material.map=foundTexture;
+        //             cube.material.map.needsUpdate = true;
+        //         }
+
+        //     }
+        // }
+
+        main.switchSize = function (size_x, size_y, size_z, fovUpdate) {
+            if (cube) {
+                setBoxSize(size_x, size_y, size_z, fovUpdate);
+            }
+        }
+
+        function setBoxSize(l, w, h, fovUpdate) {
+            //Prevent zoom out/in when reset box
+            fovUpdate = (fovUpdate != undefined) ? fovUpdate : true;
+
+            //Prevent dimensions beign passed as strings
+            gl = parseInt(l);
+            gw = parseInt(w);
+            gh = parseInt(h);
+
+            // position the cube at its center point
+            if (para == 'mailer') {
+                cube.position.set(0, -h / 2, 0);
+            }
+            if (para == 'rsc') {
+                cube.position.set(0, -0.31, 0);
+            }
+
+            // Box values condition for special rsc box
+            if (para == 'mailer' || para == 'carton') {
+                cube.scale.x = 1 / originalObjSize.x * l;
+                cube.scale.y = 1 / originalObjSize.y * w;
+                cube.scale.z = 1 / originalObjSize.z * h;
+            } else if (para == 'rsc') {
+                cube.scale.x = 1 / originalObjSize.x * l;
+                cube.scale.y = 1 / originalObjSize.y * h;
+                cube.scale.z = 1 / originalObjSize.z * w;
+            }
+
+            if (shadowMesh) {
+                shadowMesh.position.set(0, ((-h / 2) - 0.21), 0);
+                shadowMesh.scale.x = l;
+                shadowMesh.scale.y = w;
+            }
+
+
+            //console.log("setBoxsize called", shadowMesh.scale, shadowMesh.position);
+
+            /*
+            camera.aspect = (1/(cube.scale.y/(cube.scale.x*1.1)));
+            camera.updateProjectionMatrix();
+            */
+            computeCameraFOV();
+
+            if (!fovUpdate) return;
+
+            setBoxView(curView);
+        }
+
+        main.pauseAnimation = function (pause) {
+            pauseAnimFalg = pause;
+            if (pauseAnimFalg) animate();
+        };
+
+        function animate() {
+            TWEEN.update();
+            if (pauseAnimFalg) requestAnimationFrame(animate);
+            render();
+        }
+        function render() {
+            renderer.render(scene, camera);
+            //	controls.update();
+        }
+
+        function initCanvasMap() {
+            canvasMap = document.createElement('canvas');
+            canvasMap.width = 4096 * reduc;
+            canvasMap.height = 4096 * reduc;
+            context = canvasMap.getContext("2d");
+
+            canvasDieline = document.createElement('canvas');
+            canvasDieline.style.width = 5000;
+            canvasDieline.style.height = 5000;
+          console.log("initDieline", canvasDieline.style.width);
+            contextDieline = canvasDieline.getContext("2d");
+            //Todo: we might need to use to multiply option to get a more accurate representation of the printed box
+            //context.globalCompositeOperation = 'multiply';
+        }
+
+        function initFaceCanvas() {
+            // Create canvas face material
+            for (face in canvasFaces) {
+
+                var cf = currentFace(face);
+                canvasFaces[face] = document.createElement('canvas');
+                canvasFaces[face].width = cf.cw;
+                canvasFaces[face].height = cf.ch;
+                canvasFaces[face].context = canvasFaces[face].getContext("2d");
+                canvasFaces[face].context.translate(cf.tx, cf.ty);
+                canvasFaces[face].context.rotate(cf.degrees * Math.PI / 180);
+                /*
+                canvasFaces[face].texture = new THREE.Texture(canvasFaces[face]);
+                canvasFaces[face].texture.needsUpdate = true;
+                */
+            }
+        }
+
+        function initBumpNormalMap() {
+
+            var textureLoader = new THREE.TextureLoader();
+
+            bumpMap = textureLoader.load(modelPath + 'bump5.jpg');
+            normalMap = textureLoader.load(modelPath + 'normal.jpg');
+        }
+
+        function initTextures() {
+
+            const checkImage = function (path) {
+                return new Promise(resolve => {
+                    const img = new Image();
+                    img.crossOrigin = "anonymous";
+                    img.onload = () => {
+                        canvasFaces[path.Name].context.drawImage(img, 0, 0);
+                        resolve({ path, status: 'ok' });
+                    };
+                    img.onerror = () => resolve({ path, status: 'error' });
+                    img.src = modelPath + path.imageFile;
+                });
+            };
+
+
+
+            return new Promise(function (resolve, reject) {
+                Promise.all(arMaterials.map(checkImage))
+                  .then(resolve)
+                  .catch(reject);
+            });
+
+            /*
+            arMaterials.forEach(function(obj){
+                var img = new Image();
+                img.crossOrigin='anonymous';
+                img.onload = function() {
+                    canvasFaces[obj.Name].context.drawImage(img, 0, 0);
+                };
+                img.src = modelPath+obj.imageFile;
+            });
+            */
+        }
+
+        var manager = new THREE.LoadingManager();
+        var preloader = jQuery('.preloader'),
+          preloaderBar = jQuery('#builder-progress-bar');
+
+        function initObjects() {
+            console.log("init  object called");
+            manager.onStart = function (url, itemsLoaded, itemsTotal) {
+                console.log('Started loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.');
+            };
+
+            manager.onLoad = function () {
+                console.log('Loading complete!', cube);
+                window.THREE = THREE;
+                window.scene = scene;
+                callback();
+                //Remove preloader
+                // var preloader = jQuery('.preloader'),
+                //     preloaderBar = jQuery('#builder-progress-bar');
+
+                preloaderBar.addClass('is-loading');
+
+                preloader.animate({
+                    // opacity: 0,
+                }, 6000, function () {
+                    // preloader.remove();
+                    //$('#main-canvas').removeClass('hide');
+                    //Used for communication between this engine and boxbuilder angular controller
+                    window.postMessage('boxLoaded', '*');
+                });
+                //Focus first textbox on load
+                $("input:text:visible:first").focus();
+                //Select the content of an input on click
+                $("input:text").click(function () { $(this).select(); });
+            };
+
+            manager.onProgress = function (url, itemsLoaded, itemsTotal) {
+                //console.log( 'Loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.' );
+            };
+            manager.onError = function (url) {
+                console.log('There was an error loading ' + url);
+            };
+            var textureLoader = new THREE.TextureLoader(manager);
+            // set up the all the textures images
+            arMaterials.forEach(function (obj) {
+                //console.log(obj);
+                var strFile = modelPath;
+                strFile += obj.imageFile;
+                textureLoader.load(strFile, function (texture) {
+                    texture.name = obj.Name;
+                    obj.texture = texture;
+                });
+            });
+
+            var pbg = 1.15;
+            // if(para == 'rsc')pbg = 3.15;
+            textureLoader.load(modelPath + "shadow-512.png", function (t) {
+                var n = new THREE.PlaneBufferGeometry(pbg, pbg)
+                  , o = new THREE.MeshBasicMaterial({
+                    map: t,
+                    transparent: !0
+                });
+                shadowMesh = new THREE.Mesh(n, o),
+                  shadowMesh.rotation.x = -Math.PI / 2,
+                  shadowMesh.position.set(0, -.51, 0),
+                  scene.add(shadowMesh)
+            });
+
+
+            // textureLoader.load( '/model/texture_cube/full.png', function(t) {
+            textureLoader.load(modelPath + arMaterials[0].imageFile, function (t) {
+                var n = new THREE.BoxGeometry(originalObjSize.x, originalObjSize.y, originalObjSize.z)
+                  , o = new THREE.MeshBasicMaterial({
+                    map: t,
+                    transparent: !0
+                });
+
+                if (para == 'carton') {
+                    var front = [new THREE.Vector2(0, 1), new THREE.Vector2(0.5, 1), new THREE.Vector2(0.5, 0.669), new THREE.Vector2(0, 0.669)];
+                    var back = [new THREE.Vector2(0.5, 1), new THREE.Vector2(1, 1), new THREE.Vector2(1, 0.669), new THREE.Vector2(0.5, 0.669)];
+                    var left = [new THREE.Vector2(0, 0.669), new THREE.Vector2(0.5, 0.669), new THREE.Vector2(0.5, 0.340), new THREE.Vector2(0, 0.340)];
+                    var right = [new THREE.Vector2(0.5, 0.669), new THREE.Vector2(1, 0.669), new THREE.Vector2(1, 0.340), new THREE.Vector2(0.5, 0.340)];
+                    var top = [new THREE.Vector2(0, 0.333), new THREE.Vector2(0.5, 0.333), new THREE.Vector2(0.5, 0), new THREE.Vector2(0, 0)];
+                    var bottom = [new THREE.Vector2(0.5, 0.333), new THREE.Vector2(1, 0.333), new THREE.Vector2(1, 0), new THREE.Vector2(0.5, 0)];
+
+
+                    n.faceVertexUvs[0] = [];
+                    // RIGHT
+                    n.faceVertexUvs[0][0] = [right[0], right[3], right[1]];
+                    n.faceVertexUvs[0][1] = [right[3], right[2], right[1]];
+                    // LEFT  
+                    n.faceVertexUvs[0][2] = [left[0], left[3], left[1]];
+                    n.faceVertexUvs[0][3] = [left[3], left[2], left[1]];
+
+                    // BACK
+                    n.faceVertexUvs[0][4] = [back[2], back[1], back[3]];
+                    n.faceVertexUvs[0][5] = [back[1], back[0], back[3]];
+                    // FRONT 
+                    n.faceVertexUvs[0][6] = [front[2], front[1], front[3]];
+                    n.faceVertexUvs[0][7] = [front[1], front[0], front[3]];
+                    // TOP 
+                    n.faceVertexUvs[0][8] = [top[2], top[1], top[3]];
+                    n.faceVertexUvs[0][9] = [top[1], top[0], top[3]];
+                    // BOTTOM  
+                    n.faceVertexUvs[0][10] = [bottom[2], bottom[1], bottom[3]];
+                    n.faceVertexUvs[0][11] = [bottom[1], bottom[0], bottom[3]];
+
+                    cube = new THREE.Mesh(n, o);
+                    zoom = 0.45;
+                    updateFOV();
+                    // cube.rotation.y = -Math.PI / 2;
+                }
+
+            });
+
+            // setup the single materials file
+            var mfn = materialFileName;
+            var ofn = objectFileName;
+            if (para == 'rsc') {
+                var mfn = materialFileName2;
+                var ofn = objectFileName2;
+            }
+            var mtlLoader = new THREE.MTLLoader(manager);
+            mtlLoader.load(modelPath + mfn, function (mtlCreator) {
+                mtlCreator.preload();
+                var objLoader = new THREE.OBJLoader();
+                objLoader.setMaterials(mtlCreator);
+                objLoader.load(modelPath + ofn, function (object) {
+                    if (para != 'carton') {
+                        cube = object;
+                        zoom = 0.6;
+                        updateFOV();
+                    }
+                });
+            });
+
+
+            /////////////////////////
+
+
+            // var material = new THREE.MeshFaceMaterial( [
+            //     // new THREE.MeshBasicMaterial( { color: 'red', transparent: true, opacity: 1, wireframe: true } ),
+            //     new THREE.MeshBasicMaterial( { map	: canvasFaces['right'].texture, transparent: true, opacity: 1, wireframe: false }),
+            //     new THREE.MeshBasicMaterial( { map	: canvasFaces['left'].texture, transparent: true, opacity: 1, wireframe: false }),
+            //     new THREE.MeshBasicMaterial( { map	: canvasFaces['back'].texture, transparent: true, opacity: 1, wireframe: false }),
+            //     new THREE.MeshBasicMaterial( { map	: canvasFaces['front'].texture, transparent: true, opacity: 1, wireframe: false }),
+            //     new THREE.MeshBasicMaterial( { map	: canvasFaces['top'].texture, transparent: true, opacity: 1, wireframe: false }),
+            //     new THREE.MeshBasicMaterial( { map	: canvasFaces['bottom'].texture, transparent: true, opacity: 1, wireframe: false })
+            // ] );
+            // var geometry = new THREE.BoxGeometry(9.02, 7, 2.04);
+            // // material = new THREE.MeshBasicMaterial({
+            // //     color: 0xff0000,
+            // //     wireframe: true
+            // // });
+            // cnvsCube = new THREE.Mesh(geometry, material);
+            // cnvsCube.position.set(0,-0.05,0.03);
+            // rotateObject(cnvsCube,-90,0,0);
+            // scene.add(cnvsCube);
+        };
+
+
+        function currentFace(face) {
+
+            // var w = gl;
+            // var h = gh;
+            // var tw = 0;
+            // var th = 0;
+            var w = 0;
+            var h = 0;
+            var x = 0;
+            var y = 0;
+            var cw = 0;
+            var ch = 0;
+            var tx = 0;
+            var ty = 0;
+            var degrees = 90;
+            switch (face) {
+                case 'kraft':
+                case 'kraft-s':
+                case 'glossy':
+                case 'white':
+                case 'glossy-c':
+                case 'white-m':
+                case 'white-rsc':
+                case 'matte':
+                case 'premium-white-rsc':
+                case 'topShadow':
+                case 'topShadow2':
+                case 'topShadow-s':
+                    x = 0;
+                    y = 0;
+                    w = 4096;
+                    h = 4096;
+                    cw = 4096;
+                    ch = 4096;
+                    tx = 0;
+                    ty = 0;
+                    degrees = 0;
+                    break;
+                case 'front':
+                    degrees = 90;
+                    x = 0;
+                    y = 1100;
+                    w = 2030;
+                    h = 410;
+                    cw = 410;
+                    ch = 2030;
+                    tx = 410;
+                    ty = 0;
+                    if (para == 'carton') {
+                        degrees = 180;
+                        x = 0;
+                        y = -6;
+                        w = 2048;
+                        h = 1365.333;
+                        cw = 2048;
+                        ch = 2048;
+                        tx = 2048;
+                        ty = 1365.333;
+                    }
+                    if (para == 'rsc') {
+                        degrees = 0;
+                        x = 830;
+                        y = 1549;
+                        w = 1020;
+                        h = 1020;
+                        cw = 2280;
+                        ch = 2250;
+                        tx = 1220;
+                        ty = 0;
+                    }
+                    break;
+                case 'back':
+                    degrees = -90;
+                    x = 1480;
+                    y = 1100;
+                    w = 2030;
+                    h = 440;
+                    cw = 440;
+                    ch = 2030;
+                    tx = 0;
+                    ty = 2030;
+                    if (para == 'carton') {
+                        degrees = 0;
+                        x = 2048;
+                        y = 0;
+                        w = 2048;
+                        h = 1365.333;
+                        cw = 2048;
+                        ch = 2048;
+                        tx = 0;
+                        ty = 0;
+                    }
+                    if (para == 'rsc') {
+                        degrees = 0;
+                        x = -1190;
+                        y = 1549;
+                        w = 1020;
+                        h = 1020;
+                        cw = 2280;
+                        ch = 2250;
+                        tx = 1220;
+                        ty = 0;
+                    }
+                    break;
+                case 'all':
+                    degrees = 0;
+                    w = 410 + 440 + 1070 + 1050;
+                    h = 2030 + 445 + 445;
+                    x = 0;
+                    y = 625;
+                    cw = 410 + 440 + 1070 + 1050;
+                    ch = 2030 + 445 + 445;
+                    tx = 0;
+                    ty = 0;
+                    break;
+                case 'left':
+                    degrees = 0;
+                    w = 1050;
+                    h = 445;
+                    x = 1920;
+                    y = 625;
+                    cw = 1050;
+                    ch = 445;
+                    tx = 0;
+                    ty = 0;
+                    if (para == 'carton') {
+                        degrees = 90;
+                        x = 0;
+                        y = 1360;
+                        //y = 1365.333;
+
+                        //This modifies panel location, not images
+                        //w = 1365.333;
+                        //w = 1200
+                        w = 1345
+                        h = 2048;
+
+                        cw = 2048;
+                        ch = 2048;
+
+                        tx = 2048;
+                        ty = 0;
+                    }
+                    if (para == 'rsc') {
+                        degrees = 0;
+                        x = -170;
+                        y = 330;
+                        w = 1000;
+                        h = 1010;
+                        cw = 2280;
+                        ch = 2280;
+                        tx = 1220;
+                        ty = 1224;
+                    }
+                    break;
+                case 'right':
+                    degrees = 180;
+                    w = 1050;
+                    h = 445;
+                    x = 1920;
+                    y = 3160;
+                    cw = 1050;
+                    ch = 445;
+                    tx = 1050;
+                    ty = 445;
+                    if (para == 'carton') {
+                        degrees = 270;
+
+                        x = 2048;
+                        //y = 1355;
+                        y = 1200;
+
+                        w = 1365.333;
+                        h = 2048;
+
+                        cw = 2048;
+                        ch = 2048;
+
+                        tx = 0;
+                        //ty = 1355;
+                        ty = 1530;
+                    }
+                    if (para == 'rsc') {
+                        degrees = 0;
+                        x = 1840;
+                        y = 330;
+                        w = 1002;
+                        h = 1010;
+                        cw = 2280;
+                        ch = 2280;
+                        tx = 1230;
+                        ty = 1224;
+                    }
+                    break;
+                case 'top':
+                    degrees = 90;
+                    x = 410;
+                    y = 1100;
+                    w = 2030;
+                    h = 1070;
+                    cw = 1070;
+                    ch = 2030;
+                    tx = 1070;
+                    ty = 0;
+                    if (para == 'carton') {
+                        degrees = 180;
+                        x = 0;
+                        y = 2730.666;
+                        w = 2048;
+                        h = 1365.333;
+                        cw = 2048;
+                        ch = 2048;
+                        tx = 2048;
+                        ty = 1365.333;
+                    }
+                    if (para == 'rsc') {
+                        degrees = 0;
+                        x = 1030;
+                        y = 535;
+                        w = 1040;
+                        h = 1020;
+                        cw = 2160;
+                        ch = 1760;
+                        tx = 1013;
+                        ty = 0;
+                    }
+                    break;
+                case 'top-b':
+                    if (para == 'rsc') {
+                        degrees = 180;
+                        x = -41.5;
+                        y = 849;
+                        w = 1040;
+                        h = 400;
+                        cw = 2000;
+                        ch = 1740;
+                        tx = 1100;
+                        ty = 700;
+                    }
+                    break;
+                case 'bottom':
+                    degrees = 90;
+                    w = 2030;
+                    h = 1050;
+                    x = 1920;
+                    y = 1100;
+                    cw = 1050;
+                    ch = 2030;
+                    tx = 1050;
+                    ty = 0;
+                    if (para == 'carton') {
+                        degrees = 0;
+                        x = 2048;
+                        y = 2730.666;
+                        w = 2048;
+                        h = 1365.333;
+                        cw = 2048;
+                        ch = 2048;
+                        tx = 0;
+                        ty = 0;
+                    }
+                    if (para == 'rsc') {
+                        degrees = 0;
+                        x = 820;
+                        y = 1345;
+                        w = 1032;
+                        h = 1022;
+                        cw = 2280;
+                        ch = 2250;
+                        tx = 1225;
+                        ty = 1224;
+                    }
+                    break;
+                case 'bottom-b':
+                    if (para == 'rsc') {
+                        degrees = 180;
+                        x = -51;
+                        y = 2571;
+                        w = 1000;
+                        h = 2048;
+                        cw = 2048;
+                        ch = 2048;
+                        tx = 1108;
+                        ty = 1011;
+                    }
+                    break;
+            }
+
+            return {
+                x: x * reduc,
+                y: y * reduc,
+                w: w * reduc,
+                h: h * reduc,
+                cw: cw * reduc,
+                ch: ch * reduc,
+                tx: tx * reduc,
+                ty: ty * reduc,
+                degrees: degrees
+                // tw:tw*50,
+                // th:th*50,
+
+            }
+        };
+
+        function complementRect(box) {
+            if (para == 'rsc') {
+                // front
+                var colorLayer = main.getColorLayerFromPanel(box, 'front');
+                if (colorLayer !== null) {
+                    // context.fillStyle = colorLayer.layerColor;
+                    // context.fillRect( 1000, 760, 10, 540);
+
+                    // context.fillStyle = colorLayer.layerColor;
+                    // context.fillRect(1510, 760, 10, 540);
+                }
+
+                // back
+                colorLayer = main.getColorLayerFromPanel(box, 'back');
+                if (colorLayer !== null) {
+                    context.fillStyle = colorLayer.layerColor;
+                    context.fillRect(0, 760, 10, 540);
+
+                    // context.fillStyle = colorLayer.layerColor;
+                    // context.fillRect(1480*reduc,3130*reduc,435*reduc,60*reduc);
+                }
+
+                // top
+                colorLayer = main.getColorLayerFromPanel(box, 'top');
+                if (colorLayer !== null) {
+                    // context.fillStyle = colorLayer.layerColor;
+                    // context.fillRect(300, 1500, 100, 500);
+
+                    // context.fillStyle = colorLayer.layerColor;
+                    // context.fillRect(1000, 780, 500, 10);
+
+                    // context.fillStyle = colorLayer.layerColor;
+                    // context.fillRect(800, 760, 500, 40);
+
+                }
+
+                // bottom
+                colorLayer = main.getColorLayerFromPanel(box, 'bottom');
+                if (colorLayer !== null) {
+
+                    // context.fillStyle = colorLayer.layerColor;
+                    // context.fillRect(100, 1560, 500, 40);
+
+                    // context.fillStyle = colorLayer.layerColor;
+                    // context.fillRect(1920*reduc,1070*reduc,1050*reduc,30*reduc);
+
+                    // context.fillStyle = colorLayer.layerColor;
+                    // context.fillRect(1920*reduc,3130*reduc,1050*reduc,30*reduc);
+                }
+
+            }
+            else {
+
+                // front
+                var colorLayer = main.getColorLayerFromPanel(box, 'front');
+                if (colorLayer !== null) {
+                    context.fillStyle = colorLayer.layerColor;
+                    context.fillRect(0, 1040 * reduc, 410 * reduc, 60 * reduc);
+
+                    context.fillStyle = colorLayer.layerColor;
+                    context.fillRect(0, 3130 * reduc, 410 * reduc, 60 * reduc);
+                }
+
+                // top
+                colorLayer = main.getColorLayerFromPanel(box, 'top');
+                if (colorLayer !== null) {
+                    context.fillStyle = colorLayer.layerColor;
+                    context.fillRect(1920 * reduc, 557 * reduc, 1050 * reduc, 70 * reduc);
+
+                    context.fillStyle = colorLayer.layerColor;
+                    context.fillRect(1920 * reduc, 3603 * reduc, 1050 * reduc, 70 * reduc);
+                }
+
+                // back
+                colorLayer = main.getColorLayerFromPanel(box, 'back');
+                if (colorLayer !== null) {
+                    context.fillStyle = colorLayer.layerColor;
+                    context.fillRect(1480 * reduc, 1040 * reduc, 435 * reduc, 60 * reduc);
+
+                    context.fillStyle = colorLayer.layerColor;
+                    context.fillRect(1480 * reduc, 3130 * reduc, 435 * reduc, 60 * reduc);
+                }
+
+                // bottom
+                colorLayer = main.getColorLayerFromPanel(box, 'bottom');
+                if (colorLayer !== null) {
+                    context.fillStyle = colorLayer.layerColor;
+                    context.fillRect(1920 * reduc, 1070 * reduc, 1050 * reduc, 30 * reduc);
+
+                    context.fillStyle = colorLayer.layerColor;
+                    context.fillRect(1920 * reduc, 3130 * reduc, 1050 * reduc, 30 * reduc);
+                }
+            }
+        }
+
+        main.cleanCanvasMap = function () {
+            context.clearRect(0, 0, 4096 * reduc, 4096 * reduc);
+            contextDieline.clearRect(0, 0, 4096 * reduc, 4096 * reduc);
+        };
+
+        main.getCanvasContext = function () {
+            return context;
+        };
+
+        main.getColorLayerFromPanel = function (box, panel) {
+            //Traverse each panel to add color layers
+            colorLayer = null;
+            if (box[panel] === undefined) return null;
+            box[panel].forEach(function (layer) {
+                //If the layer to retrieve is a color layer then save the Index to retrieve it later
+                if (layer.layerID.substring(0, 5) === "COLOR") {
+                    colorLayer = layer;
+                }
+            });
+            return colorLayer;
+        };
+
+        main.update3DLayers = function (fcanvas, box, counter, callbackR) {
+            var bap = box.activePanel;
+            // var cf = currentFace(bap);
+            // var imagen = new Image();
+
+            var colorLayer = main.getColorLayerFromPanel(box, bap);
+            if (colorLayer !== null) {
+                fcanvas.setBackgroundColor(colorLayer.layerColor);
+            }
+            return main.printFaces(fcanvas, box);
+
+            // imagen.onload = function () {
+            //     canvasFaces[bap].context.clearRect(0, 0, cf.w, cf.h);
+            //     canvasFaces[bap].context.drawImage(this, 0, 0, cf.w, cf.h);
+            //     if (para == 'rsc') {
+            //         if (bap == 'top') {
+            //             canvasFaces['top-b'].context.clearRect(0, 0, cf.w, cf.h);
+            //             canvasFaces['top-b'].context.drawImage(this, 0, 0, cf.w, cf.h);
+            //         }
+            //         if (bap == 'bottom') {
+            //             canvasFaces['bottom-b'].context.clearRect(0, 0, cf.w, cf.h);
+            //             canvasFaces['bottom-b'].context.drawImage(this, 0, 0, cf.w, cf.h);
+            //         }
+            //     }
+            //     if (counter) {
+            //         if (typeof callbackR == 'function') callbackR();
+            //     }
+            //     else {
+            //         // var t0 = performance.now();
+            //         //doSomething();
+            //         main.printFaces(fcanvas, box);
+
+            //         //renderAllFaces(box);
+            //         // var t1 = performance.now();
+            //         // console.log("Call to doSomething took " + (t1 - t0) + " milliseconds.")
+            //     }
+            // };
+            // imagen.src = String(fcanvas.toDataURL());
+        };
+
+        main.render3DBox = function (box) {
+            renderAllFaces(box);
+        }
+
+    $(".button--export-dieline").click(function(){
+           const dataURL = canvasDieline.toDataURL('image/jpeg', 1.0);
+            const anchor = document.createElement("a");
+            anchor.href = dataURL;
+            anchor.download = `dieline.jpg`;
+            anchor.click();
+          // function getBase64Image(img) {
+          //   var canvas = document.createElement("canvas");
+          //   console.log("image",img)
+          //   canvas.width = 500*img.width/img.height;
+          //   canvas.height = 500;
+          //   var ctx = canvas.getContext("2d");
+          //   ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+          //   var dataURL = canvas.toDataURL('image/jpeg');
+          //   console.log("dataURL", dataURL)
+          //   var anchor = document.createElement("a");
+          //   anchor.href = dataURL;
+          //   anchor.download = "dieline.jpg";
+          //   anchor.click();  
+          // }
+          
+          // var base64Url = getBase64Image(document.querySelector(".dieline"));
+        })
+      
+
+        $(".product-form__submit[type='button']").click(function(){
+          canvasDieline.toBlob(
+              (blob) => {
+                  const fileInput = document.querySelector('.input-dieline');
+                  const file = new File([blob], `dieline.jpg`,{ type: "image/jpeg" })
+                  const dataTransfer = new DataTransfer();
+                  dataTransfer.items.add(file);
+                  fileInput.files = dataTransfer.files;
+                  $(".product-form__submit[type='submit']").trigger("click");
+              },
+              "image/jpeg",
+              1.0
+            );
+          
+        })
+      $( document ).ready(function() {
+        console.log( "document loaded", $("input[type='radio'][name='Stock']:checked").val());
+        if($("input[type='radio'][name='Stock']:checked").val()=='1.175" x 1.75" x 1"') {
+          const dielineImage = "https://cdn.shopify.com/s/files/1/0591/6236/1993/products/3_1.75x1.75x1.125BoxDie-1.png?v=1684325405";
+          let dielineimg = document.querySelector(".dieline");
+          dielineimg.setAttribute('src', dielineImage);
+          fetch("https://cdn.shopify.com/s/files/1/0591/6236/1993/t/7/assets/data.json")
+          .then((res) => {
+            return res.json();
+          })
+          .then((data) => {
+            canvarsInfo = data.product1;
+            console.log("can",canvarsInfo)
+          });
+        }
+    });
+
+      $("#product_option_size_stock input").change(function(){
+        if(this.value=='1.175" x 1.75" x 1"') {
+          const dielineImg = "https://cdn.shopify.com/s/files/1/0591/6236/1993/products/3_1.75x1.75x1.125BoxDie-1.png?v=1684325405";
+          let dielineimg = document.querySelector(".dieline");
+          dielineimg.setAttribute('src', dielineImg);
+          fetch("https://cdn.shopify.com/s/files/1/0591/6236/1993/t/7/assets/data.json")
+          .then((res) => {
+            return res.json();
+          })
+          .then((data) => {
+            canvarsInfo = data.product1;
+            console.log("can",canvarsInfo)
+          });
+        } else if (this.value=='6" x 3.75" x 1.75"') {
+          const dielineImg = "https://cdn.shopify.com/s/files/1/0591/6236/1993/products/4_10pk_6x3.75x1.75_BoxDie-1.png?v=1684328279";
+          let dielineimg = document.querySelector(".dieline");
+          dielineimg.setAttribute('src', dielineImg);
+          fetch("https://cdn.shopify.com/s/files/1/0591/6236/1993/t/7/assets/data.json")
+          .then((res) => {
+            return res.json();
+          })
+          .then((data) => {
+            canvarsInfo = data.product2;
+            console.log("can",canvarsInfo)
+          });
+        } else if (this.value=='3.5" x 2.125" x 1.75"') {
+          const dielineImg = "https://cdn.shopify.com/s/files/1/0591/6236/1993/products/5_3pk_3.5x2.125x1.75_BoxDie-1.png?v=1684328479";
+          let dielineimg = document.querySelector(".dieline");
+          dielineimg.setAttribute('src', dielineImg);
+          fetch("https://cdn.shopify.com/s/files/1/0591/6236/1993/t/7/assets/data.json")
+          .then((res) => {
+            return res.json();
+          })
+          .then((data) => {
+            canvarsInfo = data.product3;
+            console.log("can",canvarsInfo)
+          });
+        } else if (this.value=='4" x 3.375" x 0.5"') {
+          const dielineImg = "https://cdn.shopify.com/s/files/1/0591/6236/1993/products/6_4x3.375x5_PREROLLBOX-LUCKY7_Die-1.png?v=1684329776";
+          let dielineimg = document.querySelector(".dieline");
+          dielineimg.setAttribute('src', dielineImg);
+          fetch("https://cdn.shopify.com/s/files/1/0591/6236/1993/t/7/assets/data.json")
+          .then((res) => {
+            return res.json();
+          })
+          .then((data) => {
+            canvarsInfo = data.product4;
+            console.log("can",canvarsInfo)
+          });
+        } else if (this.value=='3.75" x 1.125" x 1.125"') {
+          const dielineImg = "https://cdn.shopify.com/s/files/1/0591/6236/1993/products/7_3.75x1.125x1.125_OilBoxDie-1.png?v=1684329806";
+          let dielineimg = document.querySelector(".dieline");
+          dielineimg.setAttribute('src', dielineImg);
+          fetch("https://cdn.shopify.com/s/files/1/0591/6236/1993/t/7/assets/data.json")
+          .then((res) => {
+            return res.json();
+          })
+          .then((data) => {
+            canvarsInfo = data.product5;
+            console.log("can",canvarsInfo)
+          });
+        } else if (this.value=='5" x 2.5" x 2.5"') {
+          const dielineImg = "https://cdn.shopify.com/s/files/1/0591/6236/1993/products/8_CornPM2.5x2.5x5BOX-1.png?v=1684329833";
+          let dielineimg = document.querySelector(".dieline");
+          dielineimg.setAttribute('src', dielineImg);
+          fetch("https://cdn.shopify.com/s/files/1/0591/6236/1993/t/7/assets/data.json")
+          .then((res) => {
+            return res.json();
+          })
+          .then((data) => {
+            canvarsInfo = data.product6;
+            console.log("can",canvarsInfo)
+          });
+        } else if (this.value=='3.5" x 2.75" x 1.5"') {
+          const dielineImg = "https://cdn.shopify.com/s/files/1/0591/6236/1993/products/9_3.5x2.75x1.5_SoapBox_Die-1.png?v=1684330380";
+          let dielineimg = document.querySelector(".dieline");
+          dielineimg.setAttribute('src', dielineImg);
+          fetch("https://cdn.shopify.com/s/files/1/0591/6236/1993/t/7/assets/data.json")
+          .then((res) => {
+            return res.json();
+          })
+          .then((data) => {
+            canvarsInfo = data.product7;
+            console.log("can",canvarsInfo)
+          });
+        } else if (this.value=='2.375" x 8.25" x 4"') {
+          const dielineImg = "https://cdn.shopify.com/s/files/1/0591/6236/1993/products/10_8.25x4.125x2.375FaceMasks-25ctBox_Dieline-1.png?v=1684330499";
+          let dielineimg = document.querySelector(".dieline");
+          dielineimg.setAttribute('src', dielineImg);
+          fetch("https://cdn.shopify.com/s/files/1/0591/6236/1993/t/7/assets/data.json")
+          .then((res) => {
+            return res.json();
+          })
+          .then((data) => {
+            canvarsInfo = data.product8;
+            console.log("can",canvarsInfo)
+          });
+        } else if (this.value=='9" x 3.75" x 6.5"') {
+          const dielineImg = "https://cdn.shopify.com/s/files/1/0591/6236/1993/products/9X14.jpg?v=1684330915";
+          let dielineimg = document.querySelector(".dieline");
+          dielineimg.setAttribute('src', dielineImg);
+          fetch("https://cdn.shopify.com/s/files/1/0591/6236/1993/t/7/assets/data.json")
+          .then((res) => {
+            return res.json();
+          })
+          .then((data) => {
+            canvarsInfo = data.product9;
+            console.log("can",canvarsInfo)
+          });
+        } else if (this.value=='12" x 9" x 2"') {
+          const dielineImg = "https://cdn.shopify.com/s/files/1/0591/6236/1993/products/12.png?v=1684605737";
+          let dielineimg = document.querySelector(".dieline");
+          dielineimg.setAttribute('src',dielineImg);
+          fetch("https://cdn.shopify.com/s/files/1/0591/6236/1993/t/7/assets/data.json")
+          .then((res) => {
+            return res.json();
+          })
+          .then((data) => {
+            canvarsInfo = data.product11;
+            console.log("can",canvarsInfo)
+          });
+        } else {
+          const dielineImg = "https://cdn.shopify.com/s/files/1/0591/6236/1993/products/12_8.5x7.5x1.5_srubsbox-1.png?v=1684330945";
+          let dielineimg = document.querySelector(".dieline");
+          dielineimg.setAttribute('src', dielineImg);
+          fetch("https://cdn.shopify.com/s/files/1/0591/6236/1993/t/7/assets/data.json")
+          .then((res) => {
+            return res.json();
+          })
+          .then((data) => {
+            canvarsInfo = data.product10;
+            console.log("can",canvarsInfo)
+          });
+        } 
+        renderAllFaces(engineBox, engineCanvas)
+      });
+
+        function renderAllFaces(box, canvas) {
+            // console.log("renderAllFaces executed");
+            engineBox = box;
+            engineCanvas = canvas;
+            var cf = currentFace(box.material);
+            context.mozImageSmoothingEnabled = false;
+            context.webkitImageSmoothingEnabled = false;
+            context.msImageSmoothingEnabled = false;
+            context.imageSmoothingEnabled = false;
+            var dielineWidth = 0;
+            var dielineHeight = 0;
+            //contextDieline.fillStyle = "#ffffff";
+            //contextDieline.fillRect(0, 0, canvasDieline.width, canvasDieline.height);
+            contextDieline.fillStyle = "#ffffff";
+            contextDieline.mozImageSmoothingEnabled = false;
+            contextDieline.webkitImageSmoothingEnabled = false;
+            contextDieline.msImageSmoothingEnabled = false;
+            contextDieline.imageSmoothingEnabled = false;
+
+            if (canvasFaces[box.material] != undefined) context.drawImage(canvasFaces[box.material], cf.x, cf.y);
+            cf = currentFace('left');
+            let topOffset = cf.y + 15;
+            cf = currentFace('front');
+            dielineWidth += cf.cw;
+            dielineHeight += cf.ch;
+            let lineWidth = 2;
+            contextDieline.lineWidth = 2;
+            contextDieline.strokeStyle = '#ffffff';
+            contextDieline.setLineDash([8, 8]);
+          
+            canvasDieline.width = canvarsInfo.width;
+            canvasDieline.height = canvarsInfo.height;
+          
+            contextDieline.drawImage(document.querySelector(".dieline"), 0, 0, canvarsInfo.width, canvarsInfo.height);
+            console.log("GridcontextDieline",document.querySelector(".dieline"))
+            context.drawImage(canvasFaces['front'], cf.x, cf.y);
+            contextDieline.drawImage(canvasFaces['front'], canvarsInfo.front.start.x, canvarsInfo.front.start.y, Math.abs(canvarsInfo.front.start.x-canvarsInfo.front.end.x), Math.abs(canvarsInfo.front.start.y-canvarsInfo.front.end.y) );
+
+            cf = currentFace('back');
+            dielineWidth += cf.cw;
+            context.drawImage(canvasFaces['back'], cf.x, cf.y);
+            contextDieline.drawImage(canvasFaces['back'],canvarsInfo.back.start.x, canvarsInfo.back.start.y, Math.abs(canvarsInfo.back.start.x-canvarsInfo.back.end.x), Math.abs(canvarsInfo.back.start.y-canvarsInfo.back.end.y));
+            contextDieline.beginPath();
+
+            cf = currentFace('top');
+            dielineWidth += cf.cw;
+            context.drawImage(canvasFaces['top'], cf.x, cf.y);
+            contextDieline.drawImage(canvasFaces['top'], canvarsInfo.top.start.x, canvarsInfo.top.start.y, Math.abs(canvarsInfo.top.start.x-canvarsInfo.top.end.x), Math.abs(canvarsInfo.top.start.y-canvarsInfo.top.end.y));
+            contextDieline.beginPath();
+           
+            cf = currentFace('bottom');
+            dielineWidth += cf.cw;
+            context.drawImage(canvasFaces['bottom'], cf.x, cf.y);
+            contextDieline.drawImage(canvasFaces['bottom'], canvarsInfo.bottom.start.x, canvarsInfo.bottom.start.y, Math.abs(canvarsInfo.bottom.start.x-canvarsInfo.bottom.end.x), Math.abs(canvarsInfo.bottom.start.y-canvarsInfo.bottom.end.y));
+            contextDieline.beginPath();
+        
+            cf = currentFace('right');
+            dielineHeight += cf.ch;
+            context.drawImage(canvasFaces['right'], cf.x, cf.y);
+            contextDieline.drawImage(canvasFaces['right'], canvarsInfo.right.start.x, canvarsInfo.right.start.y, Math.abs(canvarsInfo.right.start.x-canvarsInfo.right.end.x), Math.abs(canvarsInfo.right.start.y-canvarsInfo.right.end.y));
+            contextDieline.beginPath();
+
+            cf = currentFace('left');
+            dielineHeight += cf.ch;
+            context.drawImage(canvasFaces['left'], cf.x, cf.y);
+            contextDieline.drawImage(canvasFaces['left'], canvarsInfo.left.start.x, canvarsInfo.left.start.y, Math.abs(canvarsInfo.left.start.x-canvarsInfo.left.end.x), Math.abs(canvarsInfo.left.start.y-canvarsInfo.left.end.y));
+            contextDieline.beginPath();
+
+
+            if (para == "rsc") {
+                cf = currentFace("top-b");
+                context.drawImage(canvasFaces["top-b"], cf.x, cf.y);
+                contextDieline.drawImage(canvasFaces["top-b"], cf.x, cf.y);
+                contextDieline.beginPath();
+                contextDieline.rect( cf.x, cf.y, cf.cw, cf.ch);
+                contextDieline.stroke();
+                cf = currentFace("bottom-b");
+                context.drawImage(canvasFaces["bottom-b"], cf.x, cf.y);
+                contextDieline.drawImage(canvasFaces["bottom-b"], cf.x, cf.y);
+                contextDieline.beginPath();
+                contextDieline.rect( cf.x, cf.y, cf.cw, cf.ch);
+                contextDieline.stroke();
+            }
+            if (cube.children[0]) complementRect(box);
+
+            if (para == 'carton') {
+                cf = currentFace('topShadow2');
+                context.drawImage(canvasFaces['topShadow2'], cf.x, cf.y);
+            } else if (para == 'rsc') {
+                cf = currentFace('topShadow-s');
+                context.drawImage(canvasFaces['topShadow-s'], cf.x, cf.y);
+            } else {
+                cf = currentFace('topShadow');
+                context.drawImage(canvasFaces['topShadow'], cf.x, cf.y);
+            }
+
+            box.dielineWidth = dielineWidth;
+            box.dielineHeight = dielineHeight;
+            box.canvasMapUrl = canvasDieline.toDataURL();
+            let mapImg = new Image();
+            mapImg.src = box.canvasMapUrl;
+            mapImg.onload = function () {
+              
+                canvasDieline.width = mapImg.width;
+                canvasDieline.height = mapImg.height;
+                contextDieline.drawImage(mapImg, 0, 0,mapImg.width,mapImg.height);
+              console.log("mapimg", mapImg, canvasDieline.width, canvasDieline.height)
+            }
+            var imgElement = document.querySelector('.' + `all-img`);
+             let img = new Image();
+             if(imgElement.getAttribute('data-panel')){
+                 img.src = imgElement.getAttribute('data-panel');
+                 img.onload = function () {
+                     cf = currentFace('front');
+                     //context.drawImage(img, cf.x, cf.y);
+                     console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+                     let allcf = currentFace('all');
+                     context.drawImage(canvasFaces['all'], allcf.x, allcf.y);
+                     //document.body.appendChild(canvasFaces['all'])
+                     //document.body.appendChild(canvasMap)
+                     var pMap = new THREE.Texture(canvasMap);
+                     pMap.magFilter = THREE.NearestFilter;
+                     pMap.minFilter = THREE.LinearMipMapLinearFilter;
+
+                     cube.castShadow = true;
+                     cube.receiveShadow = true;
+
+                     if (cube.children[0]) {
+                         pMap.anisotropy = renderer.getMaxAnisotropy();
+                         cube.children[0].material.map = pMap;
+                         // cube.children[0].material.side = THREE.DoubleSide;
+                         cube.children[0].material.map.needsUpdate = true;
+                     }
+                     else {
+                         pMap.anisotropy = renderer.getMaxAnisotropy();
+                         cube.material.map = pMap;
+                         cube.material.map.needsUpdate = true;
+                     }
+
+                     if (flagLoadFirst) {
+                         cube.castShadow = true;
+                         cube.receiveShadow = true;
+                         scene.add(cube);
+
+                         if (para == 'rsc') rotateObject(cube, 0, 0, 0);
+                         else rotateObject(cube, -90, 0, 0);
+
+                         // make sure shadow has been loaded
+                         //console.log(cube, cube.scale);
+                         //          setBoxView(curView);
+                         //
+                         animate();
+                         flagLoadFirst = false;
+
+                         preloader.css('opacity', '0 !important');
+                         preloader.remove();
+                         $('#main-canvas').removeClass('hide');
+                     }
+                     // if (window.printQueue > 0 && canvas) {
+                     //     window.printQueue--;
+                     //     main.printFaces(canvas, box);
+                     // }
+                 }
+             }else{
+                 //document.body.appendChild(canvasMap)
+                 var pMap = new THREE.Texture(canvasMap);
+                 pMap.magFilter = THREE.NearestFilter;
+                 pMap.minFilter = THREE.LinearMipMapLinearFilter;
+
+                 cube.castShadow = true;
+                 cube.receiveShadow = true;
+
+                 if (cube.children[0]) {
+                     pMap.anisotropy = renderer.getMaxAnisotropy();
+                     cube.children[0].material.map = pMap;
+                     // cube.children[0].material.side = THREE.DoubleSide;
+                     cube.children[0].material.map.needsUpdate = true;
+                 }
+                 else {
+                     pMap.anisotropy = renderer.getMaxAnisotropy();
+                     cube.material.map = pMap;
+                     cube.material.map.needsUpdate = true;
+                 }
+
+                 if (flagLoadFirst) {
+                     cube.castShadow = true;
+                     cube.receiveShadow = true;
+                     scene.add(cube);
+
+                     if (para == 'rsc') rotateObject(cube, 0, 0, 0);
+                     else rotateObject(cube, -90, 0, 0);
+
+                     // make sure shadow has been loaded
+                     //console.log(cube, cube.scale);
+                     //          setBoxView(curView);
+                     //
+                     animate();
+                     flagLoadFirst = false;
+
+                     preloader.css('opacity', '0 !important');
+                     preloader.remove();
+                     $('#main-canvas').removeClass('hide');
+                 }
+                 // if (window.printQueue > 0 && canvas) {
+                 //     window.printQueue--;
+                 //     main.printFaces(canvas, box);
+                 // }
+             }
+
+
+
+        }
+
+        // function dataURLtoBlob(dataurl) {
+        //     var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+        //         bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+        //     while(n--){
+        //         u8arr[n] = bstr.charCodeAt(n);
+        //     }
+        //     return new Blob([u8arr], {type:mime});
+        // }
+
+        //////////////////////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////////////////////////
+
+        function rotateObject(object, degreeX, degreeY, degreeZ) {
+            degreeX = typeof degreeX !== 'undefined' ? degreeX : 0;
+            degreeY = typeof degreeY !== 'undefined' ? degreeY : 0;
+            degreeZ = typeof degreeZ !== 'undefined' ? degreeZ : 0;
+            degreeX = (degreeX * Math.PI) / 180;
+            degreeY = (degreeY * Math.PI) / 180;
+            degreeZ = (degreeZ * Math.PI) / 180;
+            object.rotateX(degreeX);
+            object.rotateY(degreeY);
+            object.rotateZ(degreeZ);
+        }
+
+        // a specialize camera FOV for the animation tracking the camera during the angled views
+        // this set the FOV given the current camera position which is set in a TWEE
+        function getFOV(distFrom) {
+            //console.log("getFov called", camera.fov);
+            var box3 = new THREE.Box3().setFromObject(cube);
+            var curObjSize = box3.getSize();
+
+            var tsDim = Math.sqrt(curObjSize.x * curObjSize.x + curObjSize.z * curObjSize.z);
+            var fsDim = Math.sqrt(curObjSize.x * curObjSize.x + curObjSize.y * curObjSize.y);
+            var maxDim = tsDim;
+            if (fsDim > tsDim)
+                maxDim = fsDim;
+            var maxDim = fsDim;
+            var distFront;
+            var fov1
+            // temp change the camera position to calc fov
+            var tmpCamera = camera.clone();
+            tmpCamera.position.x = 0;
+            //tmpCamera.position.z=1;
+            tmpCamera.position.y = 1;
+            // find the absolute distance from cam position and then use that distance as a front on distance
+            distFront = distFrom - curObjSize.z / 2;
+            fov1 = 2 * Math.atan(maxDim / (2 * distFront)) * (180 / Math.PI);
+
+            return fov1 * 1.;
+
+        }
+        function computeCameraFOV(newCamPos) {
+            //console.log("computefov called",curView, newCamPos);
+            var box3 = new THREE.Box3().setFromObject(cube);
+            //console.log(box3);
+            var curObjSize = box3.getSize();
+
+            // top side plane dimension and front side dimenson. The dominant dimension is used to calc max fit to width fov
+            var tsDim = Math.sqrt(curObjSize.x * curObjSize.x + curObjSize.z * curObjSize.z);
+            var fsDim = Math.sqrt(curObjSize.x * curObjSize.x + curObjSize.y * curObjSize.y);
+            var maxDim = tsDim;
+            if (fsDim > tsDim)
+                maxDim = fsDim;
+            var distFront;
+            var fov1
+            var newPos = arViews[curView];
+            if (newCamPos != undefined)
+                newPos = newCamPos;
+            // temp change the camera position to calc fov
+
+            if (curView == 0 || curView == 5) {	// front and back view
+                camera.position.x = 0;
+                camera.position.y = 1;
+                camera.position.z = Math.abs(newPos.z);
+                distFront = camera.position.z - curObjSize.z / 2;
+                fov1 = 2 * Math.atan(maxDim / (2 * distFront)) * (180 / Math.PI);
+            } else if (curView == 1 || curView == 2) {	// left and right view
+                camera.position.x = Math.abs(newPos.x);
+                camera.position.y = 1;
+                camera.position.z = 0;
+                distFront = camera.position.x - curObjSize.x / 2;
+                fov1 = 2 * Math.atan(maxDim / (2 * distFront)) * (180 / Math.PI);
+            } else if (curView == 3 || curView == 4) {	// bottom  and top view
+                camera.position.x = 0;
+                camera.position.z = 1;
+                camera.position.y = Math.abs(newPos.y);
+                distFront = camera.position.y - curObjSize.y / 2;
+                fov1 = 2 * Math.atan(maxDim / (2 * distFront)) * (180 / Math.PI);
+            }
+
+            var newFov = fov1;
+            // change back the camera's proper position
+            if (newCamPos != undefined)
+                setCameraPosition2(newCamPos.x, newCamPos.y, newCamPos.z);
+            else
+                setCameraPosition(curView);
+            // console.log("computefov End called", camera.position, curView, newCamPos);
+            //console.log(camera.position, camera.fov, newFov);
+            camera.fov = newFov * 1.;
+            //console.log(camera.fov);
+            camera.updateProjectionMatrix();
+            camera.lookAt(scene.position);
+        }
+
+        function updateFOV() {
+            //camera.zoom = 1.1;
+            fov = camera.zoom;
+            main.zoomIn();
+            main.zoomIn();
+        }
+
+        main.zoomIn = function () {
+            // updateFOV()
+            if (zoom < 2) zoom -= inc;
+            camera.zoom = fov * zoom;
+            camera.updateProjectionMatrix();
+        }
+
+        main.zoomOut = function () {
+            // updateFOV()
+            if (zoom > 0.4) zoom += inc;
+            camera.zoom = fov * zoom;
+            camera.updateProjectionMatrix();
+        }
+
+
+        main.printFaces = function (fcanvas, box) {
+
+            // if (window.isPrinting) {
+            //     window.printQueue++;
+            //     return false;
+            // }
+            // console.log('Print order accepted')
+            // window.isPrinting = true;
+
+            let emptyImg = "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==";
+
+            let cb = function (img, face) {
+                window.printFaceCounter--;
+                var cf = currentFace(face);
+                canvasFaces[face].context.clearRect(0, 0, cf.w, cf.h);
+                canvasFaces[face].context.drawImage(img, 0, 0, cf.w, cf.h);
+
+                isShipping = para === 'rsc';
+                if (isShipping) {
+                    if (face == 'top') {
+                        canvasFaces['top-b'].context.clearRect(0, 0, cf.w, cf.h);
+                        canvasFaces['top-b'].context.drawImage(img, 0, 0, cf.w, cf.h);
+                    }
+                    if (face == 'bottom') {
+                        canvasFaces['bottom-b'].context.clearRect(0, 0, cf.w, cf.h);
+                        canvasFaces['bottom-b'].context.drawImage(img, 0, 0, cf.w, cf.h);
+                    }
+                }
+
+                if (window.printFaceCounter === 0) {
+                    window.printFaceCounter = 6;
+                    window.isPrinting = false;
+                    console.log('Faces ready to render');
+                    renderAllFaces(box, fcanvas);
+                }
+            };
+
+            let img_top = new Image();
+            img_top.crossOrigin = "anonymous";
+            // img_top.src = (localStorage.getItem('top-img') != null) ? localStorage.getItem('top-img') : emptyImg;
+            var elementTop = document.querySelector('.top-img');
+            img_top.src = (elementTop.getAttribute('data-panel') !== '') ? elementTop.getAttribute('data-panel') : emptyImg;
+            img_top.onload = cb.bind(this, img_top, 'top');
+
+            let img_bottom = new Image();
+            img_bottom.crossOrigin = "anonymous";
+            // img_bottom.src = (localStorage.getItem('bottom-img') != null) ? localStorage.getItem('bottom-img') : emptyImg;
+            var elementBottom = document.querySelector('.bottom-img');
+            img_bottom.src = (elementBottom.getAttribute('data-panel') !== '') ? elementBottom.getAttribute('data-panel') : emptyImg;
+            img_bottom.onload = cb.bind(this, img_bottom, 'bottom');
+
+            let img_left = new Image();
+            img_left.crossOrigin = "anonymous";
+            // img_left.src = (localStorage.getItem('left-img') != null) ? localStorage.getItem('left-img') : emptyImg;
+            var elementLeft = document.querySelector('.left-img');
+            img_left.src = (elementLeft.getAttribute('data-panel') !== '') ? elementLeft.getAttribute('data-panel') : emptyImg;
+            img_left.onload = cb.bind(this, img_left, 'left');
+
+            let img_right = new Image();
+            img_right.crossOrigin = "anonymous";
+            // img_right.src = (localStorage.getItem('right-img') != null) ? localStorage.getItem('right-img') : emptyImg;
+            var elementRight = document.querySelector('.right-img');
+            img_right.src = (elementRight.getAttribute('data-panel') !== '') ? elementRight.getAttribute('data-panel') : emptyImg;
+            img_right.onload = cb.bind(this, img_right, 'right');
+
+            let img_front = new Image();
+            img_front.crossOrigin = "anonymous";
+            // img_front.src = (localStorage.getItem('front-img') != null) ? localStorage.getItem('front-img') : emptyImg;
+            var elementFront = document.querySelector('.front-img');
+            img_front.src = (elementFront.getAttribute('data-panel') !== '') ? elementFront.getAttribute('data-panel') : emptyImg;
+            img_front.onload = cb.bind(this, img_front, 'front');
+
+            let img_back = new Image();
+            img_back.crossOrigin = "anonymous";
+            // img_back.src = (localStorage.getItem('back-img') != null) ? localStorage.getItem('back-img') : emptyImg;
+            var elementBack = document.querySelector('.back-img');
+            img_back.src = (elementBack.getAttribute('data-panel') !== '') ? elementBack.getAttribute('data-panel') : emptyImg;
+            img_back.onload = cb.bind(this, img_back, 'back');
+
+            let img_all = new Image();
+            img_all.crossOrigin = "anonymous";
+            var elementALl = document.querySelector('.all-img');
+            img_all.src = (elementALl.getAttribute('data-panel') !== '') ? elementALl.getAttribute('data-panel') : emptyImg;
+            img_all.onload = cb.bind(this, img_all, 'all');
+
+        };
+
+        main.init();
+        return main;
+
+
+    }
+
+})(jQuery);
